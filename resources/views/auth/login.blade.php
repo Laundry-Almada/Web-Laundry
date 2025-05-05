@@ -2,9 +2,11 @@
 <html>
 <head>
     <title>Login</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<style> 
+<style>
     body {
         font-family: 'Arial', sans-serif;
         margin: 0;
@@ -125,7 +127,7 @@
     .remember-me {
     display: flex;
     align-items: center;
-    gap: 8px; 
+    gap: 8px;
     }
 
     .btn-primary {
@@ -197,7 +199,21 @@
     <div class="hero">
         <h1><b>LOGIN</b></h1>
         <div class="login-form">
-            <form method="POST" action="{{ route('login') }}">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -245,5 +261,38 @@
         </div>
     </footer>
 
+    <script>
+        // Set CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Handle form submission
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        window.location.href = '/home';
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 419) {
+                            // CSRF token mismatch, refresh the page
+                            window.location.reload();
+                        } else {
+                            // Handle other errors
+                            alert('Login failed. Please try again.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

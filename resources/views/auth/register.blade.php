@@ -2,9 +2,11 @@
 <html>
 <head>
     <title>Register</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<style> 
+<style>
     body {
         font-family: 'Arial', sans-serif;
         margin: 0;
@@ -125,7 +127,7 @@
     .remember-me {
     display: flex;
     align-items: center;
-    gap: 8px; 
+    gap: 8px;
     }
 
     .btn-primary {
@@ -267,5 +269,13 @@
         </div>
     </footer>
 
+    <script>
+        // Set CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
 </body>
 </html>
