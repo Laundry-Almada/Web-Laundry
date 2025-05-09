@@ -277,12 +277,14 @@
                 $.ajax({
                     type: 'POST',
                     url: $(this).attr('action'),
-                    data: $(this).serialize(),
+                    data: {
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        remember: $('#remember').is(':checked')
+                    },
                     success: function(response) {
-                        if (response.role === 'owner') {
-                            window.location.href = '/owner/orders';
-                        } else if (response.role === 'staff') {
-                            window.location.href = '/staff/orders';
+                        if (response.role === 'admin') {
+                            window.location.href = '/admin/orders';
                         } else {
                             window.location.href = '/home';
                         }
@@ -291,6 +293,14 @@
                         if (xhr.status === 419) {
                             // CSRF token mismatch, refresh the page
                             window.location.reload();
+                        } else if (xhr.status === 422) {
+                            // Validation error
+                            const errors = xhr.responseJSON.errors;
+                            let errorMessage = '';
+                            for (const field in errors) {
+                                errorMessage += errors[field].join('\n') + '\n';
+                            }
+                            alert(errorMessage || 'Login failed. Please check your credentials.');
                         } else {
                             // Handle other errors
                             alert('Login failed. Please try again.');

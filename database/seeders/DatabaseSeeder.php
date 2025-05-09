@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Budi Santoso',
                 'email' => 'budi@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'owner',
+                'role' => 'admin',
                 'laundry_id' => $laundries[0]['id'],
             ],
             [
@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Ridlo',
                 'email' => 'ridlo@gmail.com',
                 'password' => Hash::make('password123'),
-                'role' => 'owner',
+                'role' => 'admin',
                 'laundry_id' => $laundries[0]['id'],
             ],
         ];

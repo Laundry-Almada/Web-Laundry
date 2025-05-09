@@ -6,22 +6,22 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Halaman Landing Page
 Route::get('/', function () {
-    return view('home'); 
+    return view('home');
 })->name('home');
 
 // Halaman About Us
 Route::get('/about', function () {
-    return view('about'); 
+    return view('about');
 })->name('about');
 
 // Halaman Services
 Route::get('/services', function () {
-    return view('service'); 
+    return view('service');
 })->name('services');
 
 // Halaman Pricing
 Route::get('/pricing', function () {
-    return view('pricing'); 
+    return view('pricing');
 })->name('pricing');
 
 // Auth Routes
