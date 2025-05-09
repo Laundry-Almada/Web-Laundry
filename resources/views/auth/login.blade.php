@@ -279,7 +279,13 @@
                     url: $(this).attr('action'),
                     data: $(this).serialize(),
                     success: function(response) {
-                        window.location.href = '/home';
+                        if (response.role === 'owner') {
+                            window.location.href = '/owner/orders';
+                        } else if (response.role === 'staff') {
+                            window.location.href = '/staff/orders';
+                        } else {
+                            window.location.href = '/home';
+                        }
                     },
                     error: function(xhr) {
                         if (xhr.status === 419) {
