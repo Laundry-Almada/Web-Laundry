@@ -35,10 +35,10 @@ class OrderController extends Controller
     {
         Log::info('Mencoba menambah order baru', ['data' => $request->all()]);
         $validated = $request->validate([
-            'customer_id' => 'required|exists:users,id',
+            'customer_id' => 'required|exists:customers,id',
             'laundry_id' => 'required|exists:laundries,id',
+            'service_id' => 'required|exists:services,id',
             'order_date' => 'required|date',
-            'type' => 'required|string',
             'weight' => 'required|numeric',
             'total_price' => 'required|numeric',
             'status' => 'required|string',
@@ -57,7 +57,8 @@ class OrderController extends Controller
         Log::info('Mengakses halaman edit order', ['id' => $order->id]);
         $customers = Customer::all();
         $laundries = Laundry::all();
-        return view('admin.editorder', compact('order', 'customers', 'laundries'));
+        $services = \App\Models\Service::all();
+        return view('admin.editorder', compact('order', 'customers', 'laundries', 'services'));
     }
 
     public function update(Request $request, Order $order)
@@ -68,10 +69,10 @@ class OrderController extends Controller
         ]);
 
         $validated = $request->validate([
-            'customer_id' => 'required|exists:users,id',
+            'customer_id' => 'required|exists:customers,id',
             'laundry_id' => 'required|exists:laundries,id',
+            'service_id' => 'required|exists:services,id',
             'order_date' => 'required|date',
-            'type' => 'required|string',
             'weight' => 'required|numeric',
             'total_price' => 'required|numeric',
             'status' => 'required|string',

@@ -116,6 +116,7 @@ class DatabaseSeeder extends Seeder
         $servicesList = Service::all();
 
         // Buat 15 order dummy
+        $statuses = ['pending', 'washed', 'dried', 'ironed', 'ready_picked', 'completed', 'cancelled'];
         for ($i = 0; $i < 15; $i++) {
             Order::create([
                 'customer_id' => $customersList[$i % $customersList->count()]->id,
@@ -124,7 +125,7 @@ class DatabaseSeeder extends Seeder
                 'weight' => rand(1, 5),
                 'total_price' => rand(7000, 25000),
                 'note' => 'Order dummy ke-' . ($i + 1),
-                'status' => 'pending',
+                'status' => $statuses[array_rand($statuses)],
                 'order_date' => now(),
                 'barcode' => (string) Str::uuid(),
             ]);

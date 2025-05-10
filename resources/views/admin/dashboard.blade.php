@@ -69,9 +69,30 @@
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->customer->name ?? '-' }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $order->status === 'pending' ? 'warning' : ($order->status === 'completed' ? 'success' : 'info') }}">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
+                                    @php
+                                        $statusMap = [
+                                            'pending' => ['label' => 'Menunggu', 'class' => 'bg-warning text-dark'],
+                                            'washed' => ['label' => 'Dicuci', 'class' => 'bg-primary'],
+                                            'dried' => ['label' => 'Dikeringkan', 'class' => 'bg-info text-dark'],
+                                            'ironed' => ['label' => 'Disetrika', 'class' => 'bg-secondary'],
+                                            'ready_picked' => ['label' => 'Siap Diambil', 'class' => 'bg-info text-dark'],
+                                            'completed' => ['label' => 'Selesai', 'class' => 'bg-success'],
+                                            'cancelled' => ['label' => 'Dibatalkan', 'class' => 'bg-danger'],
+                                        ];
+                                        $status = $order->status;
+                                        if (!$status || !isset($statusMap[$status])) {
+                                            $statusLabel = 'Unknown';
+                                            $statusClass = 'bg-dark text-white';
+                                        } else {
+                                            $statusLabel = $statusMap[$status]['label'];
+                                            $statusClass = $statusMap[$status]['class'];
+                                        }
+                                    @endphp
+                                    @if($status === 'ready_picked')
+                                        <span class="badge {{ $statusClass }}">{{ $statusLabel }}</span>
+                                    @else
+                                        <span class="badge {{ $statusClass }}">{{ $statusLabel }}</span>
+                                    @endif
                                 </td>
                                 <td>{{ $order->created_at->format('d M Y H:i') }}</td>
                                 <td>
@@ -103,4 +124,13 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+.bg-purple {
+    background-color: #6f42c1 !important;
+    color: #fff !important;
+}
+</style>
 @endsection
