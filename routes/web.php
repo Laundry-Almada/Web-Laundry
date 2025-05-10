@@ -28,6 +28,9 @@ Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::get('/csrf-token', function() {
+    return response()->json(['token' => csrf_token()]);
+});
 
 // Admin Routes
 Route::prefix('admin')->group(function () {

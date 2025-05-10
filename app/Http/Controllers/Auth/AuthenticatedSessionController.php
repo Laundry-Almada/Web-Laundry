@@ -18,16 +18,24 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
         $user = Auth::user();
+
+        // Determine redirect path based on role
+        $redirectPath = match($user->role) {
+            'admin' => '/admin/dashboard',
+            'staff' => '/dashboard',
+            default => '/'
+        };
+
         return response()->json([
             'role' => $user->role,
-            'redirect' => $user->role === 'admin' ? '/admin/dashboard' : ($user->role === 'staff' ? '/dashboard' : '/home')
+            'redirect' => $redirectPath
         ]);
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy(Request $request): \Illuminate\Http\RedirectResponse
     {
         Auth::guard('web')->logout();
 
@@ -35,6 +43,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return response()->noContent();
+        return redirect()->route('login');
     }
 }
