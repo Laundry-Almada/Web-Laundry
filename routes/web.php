@@ -35,6 +35,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::get('/orders/create', [OrderController::class, 'create'])->name('admin.tambahOrder');
     Route::post('/orders', [OrderController::class, 'store'])->name('admin.storeOrder');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.viewOrder');
     Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.editOrder');
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('admin.updateOrder');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('admin.deleteOrder');

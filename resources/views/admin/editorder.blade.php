@@ -20,17 +20,6 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="laundry_id">Laundry:</label>
-                <select class="form-control" id="laundry_id" name="laundry_id" required>
-                    @foreach($laundries as $laundry)
-                        <option value="{{ $laundry->id }}" {{ $order->laundry_id == $laundry->id ? 'selected' : '' }}>
-                            {{ $laundry->nama_pelanggan }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group mb-3">
                 <label for="type">Jenis Layanan:</label>
                 <select class="form-control" id="type" name="type" required>
                     <option value="Cuci Kering" {{ $order->type == 'Cuci Kering' ? 'selected' : '' }}>Cuci Kering</option>
@@ -51,7 +40,7 @@
 
             <div class="form-group mb-3">
                 <label for="order_date">Tanggal Order:</label>
-                <input type="date" class="form-control" id="order_date" name="order_date" value="{{ $order->order_date }}" required>
+                <input type="datetime-local" class="form-control" id="order_date" name="order_date" value="{{ date('Y-m-d\TH:i', strtotime($order->order_date)) }}" required>
             </div>
 
             <div class="form-group mb-3">

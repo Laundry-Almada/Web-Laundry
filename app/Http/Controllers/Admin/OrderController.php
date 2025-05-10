@@ -81,7 +81,7 @@ class OrderController extends Controller
         $order->update($validated);
         Log::info('Berhasil update order', ['id' => $order->id]);
 
-        return redirect()->route('admin.orders')
+        return redirect()->route('admin.dashboard')
             ->with('success', 'Order berhasil diperbarui');
     }
 

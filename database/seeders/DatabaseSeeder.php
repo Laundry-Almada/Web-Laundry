@@ -15,226 +15,119 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Seeder untuk laundries
-        $laundries = [
+        // Create Laundries
+        $streets = ['Merdeka', 'Sudirman', 'Gatot Subroto', 'Veteran', 'Slamet Riyadi', 'Urip', 'Yos Sudarso', 'Ahmad Yani', 'Diponegoro', 'Pahlawan'];
+
+        for ($i = 0; $i < 10; $i++) {
+            Laundry::create([
+                'name' => 'Laundry ke-' . ($i + 1),
+                'address' => 'Jl. ' . $streets[$i] . ' No. ' . rand(10, 99) . ', Surakarta',
+                'phone' => '0812' . str_pad($i, 6, '0', STR_PAD_LEFT),
+                'email' => 'laundry' . ($i + 1) . '@laundry.com',
+                'status' => $i % 2 === 0 ? 'active' : 'inactive'
+            ]);
+        }
+
+        // Create Services for each Laundry
+        $services = [
             [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Almada',
-                'address' => 'Jl. Surakarta No. 123, Surakarta',
-                'phone' => '081234567890',
-                'email' => 'almada@example.com',
-                'status' => 'active'
+                'name' => 'Kiloan',
+                'description' => 'Layanan cuci per kilogram',
+                'price' => 5000
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Sejahtera',
-                'address' => 'Jl. Melati No. 45, Jakarta Pusat',
-                'phone' => '087654321098',
-                'email' => 'sejahtera@example.com',
-                'status' => 'active'
+                'name' => 'Express',
+                'description' => 'Layanan cuci cepat 3 jam',
+                'price' => 10000
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Bersih',
-                'address' => 'Jl. Merdeka No. 78, Bandung',
-                'phone' => '089876543210',
-                'email' => 'bersih@example.com',
-                'status' => 'active'
+                'name' => 'Satuan',
+                'description' => 'Layanan cuci per pcs',
+                'price' => 15000
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Express',
-                'address' => 'Jl. Sudirman No. 90, Jakarta Selatan',
-                'phone' => '081122334455',
-                'email' => 'express@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Kilat',
-                'address' => 'Jl. Gatot Subroto No. 56, Surabaya',
-                'phone' => '082233445566',
-                'email' => 'kilat@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Fresh',
-                'address' => 'Jl. Diponegoro No. 34, Yogyakarta',
-                'phone' => '083344556677',
-                'email' => 'fresh@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Cepat',
-                'address' => 'Jl. Veteran No. 67, Malang',
-                'phone' => '084455667788',
-                'email' => 'cepat@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Prima',
-                'address' => 'Jl. Asia Afrika No. 89, Bandung',
-                'phone' => '085566778899',
-                'email' => 'prima@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Mewah',
-                'address' => 'Jl. Thamrin No. 12, Jakarta Pusat',
-                'phone' => '086677889900',
-                'email' => 'mewah@example.com',
-                'status' => 'active'
-            ],
-            [
-                'id' => Str::uuid(),
-                'name' => 'Laundry Elite',
-                'address' => 'Jl. Pemuda No. 45, Surabaya',
-                'phone' => '087788990011',
-                'email' => 'elite@example.com',
-                'status' => 'active'
+                'name' => 'Regular',
+                'description' => 'Layanan cuci regular 24 jam',
+                'price' => 7000
             ]
         ];
 
-        foreach ($laundries as $laundry) {
-            Laundry::create($laundry);
+        foreach (Laundry::all() as $laundry) {
+            foreach ($services as $service) {
+                Service::create([
+                    'laundry_id' => $laundry->id,
+                    'name' => $service['name'],
+                    'description' => $service['description'],
+                    'price' => $service['price']
+                ]);
+            }
         }
 
-        // Seeder untuk services
-        $services = [
-            // Services untuk Laundry Bersih Jaya
-            [
-                'id' => Str::uuid(),
-                'laundry_id' => $laundries[0]['id'],
-                'name' => 'Kiloan',
-                'description' => 'Cuci dan setrika per kilogram, selesai dalam 2 hari',
-            ],
-            [
-                'id' => Str::uuid(),
-                'laundry_id' => $laundries[0]['id'],
-                'name' => 'Express',
-                'description' => 'Cuci dan setrika cepat, selesai dalam 24 jam',
-            ],
-            // Services untuk Laundry Sejahtera
-            [
-                'id' => Str::uuid(),
-                'laundry_id' => $laundries[1]['id'],
-                'name' => 'Satuan',
-                'description' => 'Cuci dan setrika per potong pakaian',
-            ],
-            [
-                'id' => Str::uuid(),
-                'laundry_id' => $laundries[1]['id'],
-                'name' => 'Regular',
-                'description' => 'Cuci standar, selesai dalam 3 hari',
-            ],
-        ];
-
-        foreach ($services as $service) {
-            Service::create($service);
-        }
-
-        // Seeder untuk users
+        // Create Users
         $users = [
             [
-                'id' => Str::uuid(),
                 'name' => 'Budi Santoso',
                 'email' => 'budi@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'admin',
-                'laundry_id' => $laundries[0]['id'],
+                'password' => Hash::make('password'),
+                'role' => 'staff'
             ],
             [
-                'id' => Str::uuid(),
                 'name' => 'Dewi Lestari',
                 'email' => 'dewi@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'staff',
-                'laundry_id' => $laundries[0]['id'],
+                'password' => Hash::make('password'),
+                'role' => 'staff'
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Ahmad Wijaya',
-                'email' => 'ahmad@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'staff',
-                'laundry_id' => $laundries[1]['id'],
-            ],
-            [
-                'id' => Str::uuid(),
                 'name' => 'Ridlo',
-                'email' => 'ridlo@gmail.com',
-                'password' => Hash::make('password123'),
-                'role' => 'admin',
-                'laundry_id' => $laundries[0]['id'],
-            ],
+                'email' => 'ridlo@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin'
+            ]
         ];
 
         foreach ($users as $user) {
             User::create($user);
         }
 
-        // Seeder untuk customers
+        // Create Customers
         $customers = [
             [
-                'id' => Str::uuid(),
-                'name' => 'Siti Rahayu',
-                'phone' => '081122334455',
-                'username' => 'sitirahayu',
+                'name' => 'Ahmad Wijaya',
+                'phone' => '081111111111',
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Rudi Hermawan',
-                'phone' => '082233445566',
-                'username' => 'rudihermawan',
+                'name' => 'Maya Putri',
+                'phone' => '081222222222',
             ],
             [
-                'id' => Str::uuid(),
-                'name' => 'Nina Kusuma',
-                'phone' => '083344556677',
-                'username' => 'ninakusuma',
+                'name' => 'Rudi Pratama',
+                'phone' => '081333333333',
             ],
         ];
-
         foreach ($customers as $customer) {
             Customer::create($customer);
         }
 
-        // Seeder untuk orders
-        $orders = [
-            [
-                'id' => Str::uuid(),
-                'customer_id' => $customers[0]['id'],
-                'laundry_id' => $laundries[0]['id'],
-                'service_id' => $services[0]['id'], // Kiloan dari Laundry Bersih Jaya
-                'status' => 'washed',
-                'barcode' => 'ORD-' . Str::random(8),
-                'weight' => 3.5,
-                'total_price' => 35000, // 3.5 kg * 10000
-                'note' => 'Tolong disetrika rapi',
-                'order_date' => now(),
-            ],
-            [
-                'id' => Str::uuid(),
-                'customer_id' => $customers[1]['id'],
-                'laundry_id' => $laundries[1]['id'],
-                'service_id' => $services[2]['id'], // Satuan dari Laundry Sejahtera
-                'status' => 'dried',
-                'barcode' => 'ORD-' . Str::random(8),
-                'weight' => 2.0,
-                'total_price' => 10000, // 2 item * 5000
-                'note' => 'Pakaian putih dipisah',
-                'order_date' => now(),
-            ],
-        ];
+        // Ambil semua data yang dibutuhkan
+        $customersList = Customer::all();
+        $laundriesList = Laundry::all();
+        $servicesList = Service::all();
 
-        foreach ($orders as $order) {
-            Order::create($order);
+        // Buat 15 order dummy
+        for ($i = 0; $i < 15; $i++) {
+            Order::create([
+                'customer_id' => $customersList[$i % $customersList->count()]->id,
+                'laundry_id' => $laundriesList[0]->id,
+                'service_id' => $servicesList[$i % $servicesList->count()]->id,
+                'weight' => rand(1, 5),
+                'total_price' => rand(7000, 25000),
+                'note' => 'Order dummy ke-' . ($i + 1),
+                'status' => 'pending',
+                'order_date' => now(),
+                'barcode' => (string) Str::uuid(),
+            ]);
         }
     }
 }

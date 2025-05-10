@@ -58,7 +58,6 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
-                            <th>Laundry</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Actions</th>
@@ -69,7 +68,6 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->customer->name ?? '-' }}</td>
-                                <td>{{ $order->laundry->nama_pelanggan ?? '-' }}</td>
                                 <td>
                                     <span class="badge bg-{{ $order->status === 'pending' ? 'warning' : ($order->status === 'completed' ? 'success' : 'info') }}">
                                         {{ ucfirst($order->status) }}
@@ -77,9 +75,21 @@
                                 </td>
                                 <td>{{ $order->created_at->format('d M Y H:i') }}</td>
                                 <td>
-                                    <a href="{{ route('admin.editOrder', $order->id) }}" class="btn btn-sm btn-warning">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('admin.editOrder', $order->id) }}" class="btn btn-warning">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="{{ route('admin.viewOrder', $order->id) }}" class="btn btn-info">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        <form action="{{ route('admin.deleteOrder', $order->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
