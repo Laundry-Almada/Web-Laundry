@@ -117,6 +117,64 @@ class LaundryController extends BaseController
     }
 
 
+    
+    public function edit($id)
+    {   
+        $laundry = Laundry::find($id)->first();
+        
+        if(!$laundry){
+            return response()->json([
+                'success' => false,
+                'message' => 'Laundry not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => new LaundryResource($laundry),
+        ], 200);
+    }
+
+    public function update(Request $request, Laundry $laundry)
+    {
+        try {
+            $phone = $this->formatPhoneNumber($request->phone);
+
+            if (!str_starts_with($phone, '8')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid phone number format. Phone number must start with 8',
+                ], 422);
+            }
+            
+            $rules = [
+                'name' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+                'phone' => 'required|string|max:15|unique:laundries,phone,' . $laundry->id,
+            ];
+
+            $validated = $request->validate($rules);
+
+            $laundry->update([
+                'name' => $validated['name'],
+                'address' => $validated['address'],
+                'phone' => $phone,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Laundry updated successfully',
+                'data' => new LaundryResource($laundry),
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update laundry',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function destroy(Laundry $laundry)
     {
         try {
