@@ -77,13 +77,13 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ route('admin_dashboard') }}">Admin Laundry</a>
+      <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Laundry</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon" style="color: white;"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="{{ route('admin_dashboard') }}">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Beranda</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ route('admin.laundryIndex') }}">Data Laundry</a></li>
         </ul>
         <form method="POST" action="{{ route('logout') }}">

@@ -95,4 +95,16 @@ class OrderController extends Controller
         return redirect()->route('admin.orders')
             ->with('success', 'Order berhasil dihapus');
     }
+
+    /**
+     * Display the specified order.
+     */
+    public function show(Order $order)
+    {
+        return view('admin.orders.show', [
+            'order' => $order,
+            'customers' => Customer::all(),
+            'laundries' => Laundry::all()
+        ]);
+    }
 }

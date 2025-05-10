@@ -29,7 +29,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 
 // Admin Routes
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin_dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Orders Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');

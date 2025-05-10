@@ -8,6 +8,8 @@
             @csrf
             @method('PUT')
 
+            <input type="hidden" name="laundry_id" value="{{ $order->laundry_id }}">
+
             <div class="form-group mb-3">
                 <label for="customer_id">Pelanggan:</label>
                 <select class="form-control" id="customer_id" name="customer_id" required>
