@@ -273,25 +273,37 @@
         $(document).ready(function() {
             $('#loginForm').on('submit', function(e) {
                 e.preventDefault();
+                console.log('Form submitted');
+
+                // Get the CSRF token from the meta tag
+                const token = $('meta[name="csrf-token"]').attr('content');
+                console.log('CSRF Token:', token);
 
                 $.ajax({
                     type: 'POST',
                     url: $(this).attr('action'),
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
                     data: {
+                        _token: token,  // Include token in the data as well
                         email: $('#email').val(),
                         password: $('#password').val(),
                         remember: $('#remember').is(':checked')
                     },
                     success: function(response) {
+                        console.log('Login successful:', response);
                         if (response.role === 'admin') {
                             window.location.href = '/admin/orders';
                         } else {
                             window.location.href = '/home';
                         }
                     },
-                    error: function(xhr) {
+                    error: function(xhr, status, error) {
+                        console.log('Login error:', {xhr, status, error});
                         if (xhr.status === 419) {
                             // CSRF token mismatch, refresh the page
+                            alert('Session expired. Please refresh the page and try again.');
                             window.location.reload();
                         } else if (xhr.status === 422) {
                             // Validation error
