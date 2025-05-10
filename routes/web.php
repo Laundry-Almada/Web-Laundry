@@ -39,6 +39,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/orders/{order}/edit', [OrderController::class, 'edit'])->name('admin.editOrder');
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('admin.updateOrder');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('admin.deleteOrder');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
 
     // Laundry Routes
     Route::get('/laundries', [LaundryController::class, 'index'])->name('admin.laundryIndex');

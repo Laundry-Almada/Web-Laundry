@@ -17,6 +17,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // $this->call([
+        //     UserSeeder::class,
+        //     CustomerSeeder::class,
+        //     LaundrySeeder::class,
+        //     ServiceSeeder::class,
+        //     OrderSeeder::class,
+        // ]);
+
         // Create Laundries
         $streets = ['Merdeka', 'Sudirman', 'Gatot Subroto', 'Veteran', 'Slamet Riyadi', 'Urip', 'Yos Sudarso', 'Ahmad Yani', 'Diponegoro', 'Pahlawan'];
 
@@ -94,16 +102,16 @@ class DatabaseSeeder extends Seeder
         // Create Customers
         $customers = [
             [
-                'name' => 'Ahmad Wijaya',
-                'phone' => '081111111111',
+                'name' => 'Customer Dummy ' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
+                'phone' => '081' . str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT),
             ],
             [
-                'name' => 'Maya Putri',
-                'phone' => '081222222222',
+                'name' => 'Customer Dummy ' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
+                'phone' => '081' . str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT),
             ],
             [
-                'name' => 'Rudi Pratama',
-                'phone' => '081333333333',
+                'name' => 'Customer Dummy ' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT),
+                'phone' => '081' . str_pad(rand(0, 999999999), 9, '0', STR_PAD_LEFT),
             ],
         ];
         foreach ($customers as $customer) {
@@ -115,20 +123,35 @@ class DatabaseSeeder extends Seeder
         $laundriesList = Laundry::all();
         $servicesList = Service::all();
 
-        // Buat 15 order dummy
+        // Generate order 2 bulan terakhir
+        $faker = \Faker\Factory::create('id_ID');
         $statuses = ['pending', 'washed', 'dried', 'ironed', 'ready_picked', 'completed', 'cancelled'];
-        for ($i = 0; $i < 15; $i++) {
-            Order::create([
-                'customer_id' => $customersList[$i % $customersList->count()]->id,
-                'laundry_id' => $laundriesList[0]->id,
-                'service_id' => $servicesList[$i % $servicesList->count()]->id,
-                'weight' => rand(1, 5),
-                'total_price' => rand(7000, 25000),
-                'note' => 'Order dummy ke-' . ($i + 1),
-                'status' => $statuses[array_rand($statuses)],
-                'order_date' => now(),
-                'barcode' => (string) Str::uuid(),
-            ]);
+        $startDate = now()->subMonths(2)->startOfMonth();
+        $endDate = now();
+        $currentDate = $startDate->copy();
+        while ($currentDate <= $endDate) {
+            $ordersPerDay = rand(50, 100);
+            for ($i = 0; $i < $ordersPerDay; $i++) {
+                $customer = $customersList->random();
+                $laundry = $laundriesList->random();
+                $service = $servicesList->random();
+                $status = $faker->randomElement($statuses);
+                $orderTime = $currentDate->copy()->setHour(rand(7, 21))->setMinute(rand(0, 59));
+                $totalPrice = $faker->numberBetween(50000, 500000);
+                Order::create([
+                    'customer_id' => $customer->id,
+                    'laundry_id' => $laundry->id,
+                    'service_id' => $service->id,
+                    'barcode' => 'ORD-' . strtoupper(uniqid()),
+                    'order_date' => $orderTime,
+                    'status' => $status,
+                    'weight' => $faker->randomFloat(2, 1, 10),
+                    'total_price' => $totalPrice,
+                    'created_at' => $orderTime,
+                    'updated_at' => $orderTime,
+                ]);
+            }
+            $currentDate->addDay();
         }
     }
 }
