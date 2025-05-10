@@ -293,11 +293,7 @@
                     },
                     success: function(response) {
                         console.log('Login successful:', response);
-                        if (response.role === 'admin') {
-                            window.location.href = '/admin/orders';
-                        } else {
-                            window.location.href = '/home';
-                        }
+                        window.location.href = response.redirect;
                     },
                     error: function(xhr, status, error) {
                         console.log('Login error:', {xhr, status, error});

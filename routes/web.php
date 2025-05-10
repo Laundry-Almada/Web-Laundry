@@ -8,8 +8,10 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LaundryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Staff\OrderController as StaffOrderController;
 
 // Halaman Landing Page
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,7 +31,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 
 // Admin Routes
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Orders Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
@@ -52,3 +54,11 @@ Route::prefix('admin')->group(function () {
 
 // Include auth.php routes
 require __DIR__.'/auth.php';
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+
+// Staff Routes
+Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'staffDashboard'])->name('staff.dashboard');
+    Route::get('/orders', [StaffOrderController::class, 'staffOrders'])->name('staff.orders');
+});
