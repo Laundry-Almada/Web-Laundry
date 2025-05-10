@@ -24,13 +24,81 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Laundry Almada',
                 'address' => 'Jl. Surakarta No. 123, Surakarta',
                 'phone' => '081234567890',
+                'email' => 'almada@example.com',
+                'status' => 'active'
             ],
             [
                 'id' => Str::uuid(),
                 'name' => 'Laundry Sejahtera',
                 'address' => 'Jl. Melati No. 45, Jakarta Pusat',
                 'phone' => '087654321098',
+                'email' => 'sejahtera@example.com',
+                'status' => 'active'
             ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Bersih',
+                'address' => 'Jl. Merdeka No. 78, Bandung',
+                'phone' => '089876543210',
+                'email' => 'bersih@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Express',
+                'address' => 'Jl. Sudirman No. 90, Jakarta Selatan',
+                'phone' => '081122334455',
+                'email' => 'express@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Kilat',
+                'address' => 'Jl. Gatot Subroto No. 56, Surabaya',
+                'phone' => '082233445566',
+                'email' => 'kilat@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Fresh',
+                'address' => 'Jl. Diponegoro No. 34, Yogyakarta',
+                'phone' => '083344556677',
+                'email' => 'fresh@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Cepat',
+                'address' => 'Jl. Veteran No. 67, Malang',
+                'phone' => '084455667788',
+                'email' => 'cepat@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Prima',
+                'address' => 'Jl. Asia Afrika No. 89, Bandung',
+                'phone' => '085566778899',
+                'email' => 'prima@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Mewah',
+                'address' => 'Jl. Thamrin No. 12, Jakarta Pusat',
+                'phone' => '086677889900',
+                'email' => 'mewah@example.com',
+                'status' => 'active'
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Laundry Elite',
+                'address' => 'Jl. Pemuda No. 45, Surabaya',
+                'phone' => '087788990011',
+                'email' => 'elite@example.com',
+                'status' => 'active'
+            ]
         ];
 
         foreach ($laundries as $laundry) {
