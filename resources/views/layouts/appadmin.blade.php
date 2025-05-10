@@ -15,112 +15,203 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f8f9fa;
+      background-color: #eaf3fa;
+      margin: 0;
+      padding: 0;
     }
-
-    .navbar {
-      background-color: #006D77;
+    .main-wrapper {
+      display: flex;
+      min-height: 100vh;
     }
-
-    .navbar-brand,
-    .nav-link,
-    .btn-logout {
-      color: #ffffff !important;
-      font-weight: 500;
-    }
-
-    .nav-link:hover {
-      color: #FFD166 !important;
-    }
-
-    .btn-logout {
-      border: none;
-      background-color: #EF476F;
-      padding: 5px 12px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-logout:hover {
-      background-color: #d63a5a;
-    }
-
-    footer {
-      background-color: #006D77;
+    .sidebar {
+      width: 260px;
+      background: #0a3d62;
       color: #fff;
-      text-align: center;
-      padding: 20px 0;
-      margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 200;
     }
-
-    footer a {
-      color: #FFD166;
+    .sidebar .logo {
+      width: 180px;
+      margin: 32px 0 16px 32px;
+      align-self: flex-start;
+    }
+    .sidebar .sidebar-menu {
+      width: 100%;
+      margin-top: 32px;
+      flex: 1;
+    }
+    .sidebar .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 16px 32px;
+      color: #fff;
       text-decoration: none;
+      font-size: 18px;
+      border-radius: 30px 0 0 30px;
+      margin-bottom: 8px;
+      transition: background 0.2s;
     }
-
-    footer a:hover {
-      text-decoration: underline;
+    .sidebar .sidebar-menu a.active, .sidebar .sidebar-menu a:hover {
+      background: #1e5a99;
+      color: #fff;
     }
-
-    .container {
-      padding-top: 80px;
+    .sidebar .sidebar-menu i {
+      margin-right: 16px;
+      font-size: 22px;
     }
-
+    .sidebar .sidebar-footer {
+      margin-bottom: 32px;
+      font-size: 14px;
+      color: #b0c4de;
+      text-align: center;
+      width: 100%;
+    }
+    .sidebar .logout-btn {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      padding: 0 32px 16px 32px;
+    }
+    .sidebar .logout-btn form {
+      width: 100%;
+    }
+    .sidebar .logout-btn button {
+      width: 100%;
+      background: #ef476f;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 0;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    .sidebar .logout-btn button:hover {
+      background: #d63a5a;
+    }
+    .header {
+      width: calc(100% - 260px);
+      background: #0a3d62;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      position: fixed;
+      top: 0;
+      left: 260px;
+      z-index: 100;
+      height: 60px;
+    }
+    .header .contact-info {
+      display: flex;
+      gap: 32px;
+      font-size: 15px;
+      align-items: center;
+    }
+    .header .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .header .btn-login, .header .btn-register {
+      background: #fff;
+      color: #0a3d62;
+      border: none;
+      border-radius: 20px;
+      padding: 4px 18px;
+      font-weight: bold;
+      font-size: 15px;
+      margin-left: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .header .btn-login:hover, .header .btn-register:hover {
+      background: #1e5a99;
+      color: #fff;
+    }
+    .content-area {
+      flex: 1;
+      margin-left: 260px;
+      margin-top: 60px;
+      padding: 32px 32px 32px 32px;
+      background: #eaf3fa;
+      min-height: calc(100vh - 60px);
+    }
     .alert {
       margin-top: 20px;
       margin-bottom: 20px;
     }
+    footer {
+      background: #0a3d62;
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 0;
+    }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Laundry</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon" style="color: white;"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Beranda</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ route('admin.laundryIndex') }}">Data Laundry</a></li>
-        </ul>
+  <div class="main-wrapper">
+    <aside class="sidebar">
+      <img src="/logo-laundry.png" alt="Logo Almada Laundry" class="logo">
+      <div class="sidebar-menu">
+        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fas fa-chart-pie"></i> Dashboard</a>
+        <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders') ? 'active' : '' }}"><i class="fas fa-list"></i> Order</a>
+        <a href="#"><i class="fas fa-comments"></i> Message</a>
+        <a href="#"><i class="fas fa-user"></i> Profile</a>
+        <a href="#"><i class="fas fa-cog"></i> Setting</a>
+      </div>
+      <div class="logout-btn">
         <form method="POST" action="{{ route('logout') }}">
           @csrf
-          <button type="submit" class="btn btn-logout">Logout</button>
+          <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </form>
       </div>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <main class="container">
-    @if(session('success'))
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="sidebar-footer">
+        <div>HIBAH MBKM UNS</div>
       </div>
-    @endif
-
-    @if(session('error'))
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    @endif
-
-    @yield('content')
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Almada Laundry. All rights reserved.</p>
+    </aside>
+    <div style="width:100%">
+      <header class="header">
+        <div class="contact-info">
+          <span><i class="fas fa-phone"></i> Phone: +62 812345678</span>
+          <span><i class="fas fa-envelope"></i> Email: almadalaundry@gmail.com</span>
+        </div>
+        <div class="header-actions">
+          <a href="{{ route('login') }}" class="btn btn-login">LOGIN</a>
+          <a href="{{ route('register') }}" class="btn btn-register">REGISTER</a>
+        </div>
+      </header>
+      <main class="content-area">
+        @if(session('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        @endif
+        @if(session('error'))
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        @endif
+        @yield('content')
+      </main>
+      <footer>
+        <div class="container">
+          <p>&copy; 2025 Almada Laundry. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
-  </footer>
-
-  <!-- Bootstrap JS -->
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,297 +1,326 @@
 @extends('layouts.appadmin')
 
 @section('content')
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h2 class="mb-4">Dashboard</h2>
-        </div>
+<div class="dashboard-wrapper">
+  <!-- Statistik Ringkas -->
+  <div class="row g-4 mb-4 dashboard-stats">
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+        <div class="stat-label">Total Sales</div>
+        <div class="stat-value">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }},-</div>
+      </div>
     </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
+        <div class="stat-label">Total Customer</div>
+        <div class="stat-value">{{ $totalCustomers ?? 0 }} customer</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+        <div class="stat-label">Total Transactions</div>
+        <div class="stat-value">Rp {{ number_format($totalOrders ?? 0, 0, ',', '.') }},-</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+        <div class="stat-label">Total Tax</div>
+        <div class="stat-value">Rp 899.900,-</div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Statistik Utama -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Customers</h5>
-                    <h2 class="card-text">{{ $totalCustomers ?? 0 }}</h2>
-                </div>
-            </div>
+  <div class="row g-4">
+    <div class="col-12">
+      <!-- Tabel Order -->
+      <div class="order-table-card order-table-rounded">
+        <div class="order-table-header order-table-grid-order">
+          <div>ORDER ID</div>
+          <div>NAMA</div>
+          <div>BERAT</div>
+          <div>ANTAR</div>
+          <div>TIPE</div>
+          <div>TOTAL</div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Laundries</h5>
-                    <h2 class="card-text">{{ $totalLaundries ?? 0 }}</h2>
-                </div>
-            </div>
+        <div class="order-table-body">
+          @foreach($recentOrders ?? [] as $order)
+          <div class="order-row order-table-grid-order">
+            <div class="truncate order-id-col">{{ $order->id }}</div>
+            <div>{{ $order->customer->name ?? '-' }}</div>
+            <div class="text-end">{{ $order->weight ?? '3' }} KG</div>
+            <div>{{ $order->antar ?? 'HOME DELIVERY' }}</div>
+            <div>{{ $order->service->name ?? 'EXPRESS' }}</div>
+            <div class="total-col">Rp{{ number_format($order->total_price ?? 0, 0, ',', '.') }},-</div>
+          </div>
+          @endforeach
         </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Orders</h5>
-                    <h2 class="card-text">{{ $totalOrders ?? 0 }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Total Revenue</h5>
-                    <h2 class="card-text">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }}</h2>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-
-    <!-- Grafik -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Order Statistics</h5>
-                </div>
-                <div class="card-body">
-                    <div style="height: 300px;">
-                        <canvas id="orderStatusChart"></canvas>
-                    </div>
-                </div>
-            </div>
+    <div class="col-12 d-flex flex-row gap-4 mt-4">
+      <div class="tracking-table-card tracking-table-rounded flex-grow-1" style="max-width: 40%">
+        <div class="tracking-table-header tracking-table-grid-tracking">
+          <div>ORDER ID</div>
+          <div>TRACKING</div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Monthly Orders</h5>
-                </div>
-                <div class="card-body">
-                    <div style="height: 300px;">
-                        <canvas id="monthlyOrdersChart"></canvas>
-                    </div>
-                </div>
-            </div>
+        <div class="tracking-table-body">
+          @foreach($recentOrders ?? [] as $order)
+          <div class="tracking-row tracking-table-grid-tracking">
+            <div class="truncate">{{ $order->id }}</div>
+            <div>{{ strtoupper($order->status) }}</div>
+          </div>
+          @endforeach
         </div>
+      </div>
+      <div class="chart-card chart-card-rounded flex-grow-1" style="max-width: 60%">
+        <canvas id="orderBarChart" height="260"></canvas>
+      </div>
     </div>
-
-    <!-- Grafik Revenue -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Monthly Revenue</h5>
-                </div>
-                <div class="card-body">
-                    <div style="height: 300px;">
-                        <canvas id="monthlyRevenueChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Orders -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent Orders</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Customer</th>
-                                    <th>Laundry</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($recentOrders ?? [] as $order)
-                                <tr>
-                                    <td>{{ $order->id }}</td>
-                                    <td>{{ $order->customer->name ?? '-' }}</td>
-                                    <td>{{ $order->laundry->name ?? '-' }}</td>
-                                    <td>{{ $order->order_date ? date('d/m/Y', strtotime($order->order_date)) : '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $order->status === 'pending' ? 'warning' : ($order->status === 'washed' ? 'info' : ($order->status === 'dried' ? 'success' : ($order->status === 'ironed' ? 'primary' : ($order->status === 'ready_picked' ? 'secondary' : ($order->status === 'completed' ? 'success' : 'danger'))))) }}">
-                                            {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                                        </span>
-                                    </td>
-                                    <td>Rp {{ number_format($order->total_price ?? 0, 0, ',', '.') }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-info">View</a>
-                                        <a href="{{ route('admin.editOrder', $order->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('admin.deleteOrder', $order->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Are you sure you want to delete this order?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6" class="text-center">No recent orders</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
-@endsection
+
+<style>
+.dashboard-wrapper {
+  width: 100%;
+}
+.dashboard-stats .stat-card {
+  background: #0a3d62;
+  color: #fff;
+  border-radius: 24px;
+  padding: 32px 24px 24px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(10,61,98,0.08);
+  position: relative;
+  min-height: 170px;
+}
+.stat-icon {
+  font-size: 38px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+.stat-label {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: bold;
+}
+.order-table-card, .tracking-table-card {
+  overflow-x: auto;
+}
+.order-table-grid-order {
+  display: grid;
+  grid-template-columns: 2fr 2.5fr 1.2fr 2fr 1.5fr 1.7fr;
+  align-items: center;
+  text-align: left;
+}
+.order-table-header.order-table-grid-order {
+  font-weight: bold;
+  font-size: 17px;
+  text-align: center;
+  background: #1e5a99;
+  color: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 18px 32px;
+}
+.order-table-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+}
+.order-row.order-table-grid-order > div {
+  padding: 6px 0;
+  text-align: center;
+}
+.order-row .text-end {
+  text-align: right;
+}
+.order-row .truncate {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tracking-table-grid-tracking {
+  display: grid;
+  grid-template-columns: 2.5fr 1.2fr;
+  align-items: center;
+  text-align: left;
+}
+.tracking-table-header.tracking-table-grid-tracking {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  background: #1e5a99;
+  color: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 14px 32px;
+}
+.tracking-table-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+}
+.tracking-row.tracking-table-grid-tracking > div {
+  padding: 6px 0;
+  text-align: center;
+}
+.tracking-row .truncate {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chart-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 2px 12px rgba(10,61,98,0.08);
+  padding: 24px 24px 16px 24px;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.order-table-rounded {
+  border-radius: 20px;
+  background: #0a3d62;
+  box-shadow: 0 4px 16px rgba(10,61,98,0.12);
+  padding-bottom: 12px;
+}
+.order-table-header.order-table-grid-order {
+  background: transparent;
+  color: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 24px 10px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  display: grid;
+  grid-template-columns: 2fr 2.5fr 1.2fr 2fr 1.5fr 1.7fr;
+  gap: 0;
+}
+.order-table-body {
+  background: transparent;
+  padding: 0 24px 0 24px;
+}
+.order-row.order-table-grid-order {
+  background: #2366a8;
+  color: #fff;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  display: grid;
+  grid-template-columns: 2fr 2.5fr 1.2fr 2fr 1.5fr 1.7fr;
+  align-items: center;
+  min-height: 44px;
+}
+.order-row > div {
+  text-align: center;
+  padding: 6px 0;
+}
+.order-row .order-id-col {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 18px;
+  letter-spacing: 0.5px;
+}
+.order-row .total-col {
+  text-align: right;
+  font-size: 16px;
+  font-weight: bold;
+  padding-right: 18px;
+}
+.order-table-header.order-table-grid-order > div:first-child {
+  text-align: left;
+  padding-left: 18px;
+}
+.order-table-header.order-table-grid-order > div:last-child {
+  text-align: right;
+  padding-right: 18px;
+}
+.tracking-table-rounded {
+  border-radius: 20px;
+  background: #0a3d62;
+  box-shadow: 0 4px 16px rgba(10,61,98,0.12);
+  padding-bottom: 12px;
+}
+.tracking-table-header.tracking-table-grid-tracking {
+  background: transparent;
+  color: #fff;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 24px 8px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  display: grid;
+  grid-template-columns: 2.5fr 1.2fr;
+  gap: 0;
+}
+.tracking-table-body {
+  background: transparent;
+  padding: 0 24px 0 24px;
+}
+.tracking-row.tracking-table-grid-tracking {
+  background: #2366a8;
+  color: #fff;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  display: grid;
+  grid-template-columns: 2.5fr 1.2fr;
+  align-items: center;
+  text-align: center;
+  min-height: 38px;
+}
+.chart-card.chart-card-rounded {
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(10,61,98,0.12);
+  min-height: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Data untuk grafik
-    const orderStatusData = JSON.parse('{!! json_encode($orderStatusData ?? []) !!}');
-    const monthlyOrdersData = JSON.parse('{!! json_encode($monthlyOrdersData ?? []) !!}');
-    const monthlyRevenueData = JSON.parse('{!! json_encode($monthlyRevenueData ?? []) !!}');
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Grafik Status Order
-    const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
-    new Chart(orderStatusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Pending', 'Washed', 'Dried', 'Ironed', 'Ready to Pick', 'Completed', 'Cancelled'],
-            datasets: [{
-                data: [
-                    orderStatusData.pending,
-                    orderStatusData.washed,
-                    orderStatusData.dried,
-                    orderStatusData.ironed,
-                    orderStatusData.ready_picked,
-                    orderStatusData.completed,
-                    orderStatusData.cancelled
-                ],
-                backgroundColor: [
-                    '#ffc107', // warning - pending
-                    '#17a2b8', // info - washed
-                    '#28a745', // success - dried
-                    '#007bff', // primary - ironed
-                    '#6c757d', // secondary - ready_picked
-                    '#20c997', // success - completed
-                    '#dc3545'  // danger - cancelled
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                title: {
-                    display: true,
-                    text: 'Order Status Distribution'
-                }
-            }
-        }
-    });
-
-    // Grafik Order per Bulan
-    const monthlyOrdersCtx = document.getElementById('monthlyOrdersChart').getContext('2d');
-    const monthLabels = Object.keys(monthlyOrdersData).map(month => months[parseInt(month) - 1]);
-
-    new Chart(monthlyOrdersCtx, {
-        type: 'line',
-        data: {
-            labels: monthLabels,
-            datasets: [{
-                label: 'Orders',
-                data: Object.values(monthlyOrdersData),
-                borderColor: '#17a2b8',
-                tension: 0.1,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                title: {
-                    display: true,
-                    text: 'Monthly Orders'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            }
-        }
-    });
-
-    // Grafik Pendapatan per Bulan
-    const monthlyRevenueCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
-
-    new Chart(monthlyRevenueCtx, {
-        type: 'bar',
-        data: {
-            labels: monthLabels,
-            datasets: [{
-                label: 'Revenue',
-                data: Object.values(monthlyRevenueData),
-                backgroundColor: '#28a745'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                title: {
-                    display: true,
-                    text: 'Monthly Revenue'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
-                    }
-                }
-            }
-        }
-    });
+  // Data dummy untuk grafik batang
+  const barData = {
+    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+    datasets: [{
+      label: 'Order',
+      data: [12, 19, 8, 15, 10, 17, 14],
+      backgroundColor: '#1e5a99',
+      borderRadius: 8,
+      barThickness: 28
+    }]
+  };
+  const ctx = document.getElementById('orderBarChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: barData,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: false }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: '#eaf3fa' }, beginAtZero: true }
+      }
+    }
+  });
 });
 </script>
 @endpush
-
-@section('styles')
-<style>
-.card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    margin-bottom: 1rem;
-}
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-.badge {
-    font-size: 0.875rem;
-    padding: 0.5em 0.75em;
-}
-</style>
 @endsection
