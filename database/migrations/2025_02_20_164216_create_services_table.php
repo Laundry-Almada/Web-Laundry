@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('laundry_id');
-            $table->string('name'); // Nama service, misalnya 'Express', 'Regular'
-            $table->text('description')->nullable(); // Keterangan service
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
             $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
             $table->timestamps();
         });

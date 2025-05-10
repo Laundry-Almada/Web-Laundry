@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['staff', 'owner']);
+            $table->enum('role', ['staff', 'admin']);
             $table->uuid('laundry_id')->nullable();
             $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
             $table->rememberToken();

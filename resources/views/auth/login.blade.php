@@ -271,29 +271,70 @@
 
         // Handle form submission
         $(document).ready(function() {
+            // Refresh CSRF token on page load
+            $.get('/csrf-token', function(data) {
+                $('meta[name="csrf-token"]').attr('content', data.token);
+            });
+
             $('#loginForm').on('submit', function(e) {
                 e.preventDefault();
+                console.log('Form submitted');
+
+                // Get the CSRF token from the meta tag
+                const token = $('meta[name="csrf-token"]').attr('content');
+                console.log('CSRF Token:', token);
+
+                // Disable submit button to prevent double submission
+                const submitButton = $(this).find('button[type="submit"]');
+                submitButton.prop('disabled', true);
 
                 $.ajax({
                     type: 'POST',
                     url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.role === 'owner') {
-                            window.location.href = '/owner/orders';
-                        } else if (response.role === 'staff') {
-                            window.location.href = '/staff/orders';
-                        } else {
-                            window.location.href = '/home';
-                        }
+                    headers: {
+                        'X-CSRF-TOKEN': token
                     },
-                    error: function(xhr) {
+                    data: {
+                        _token: token,
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        remember: $('#remember').is(':checked')
+                    },
+                    success: function(response) {
+                        console.log('Login successful:', response);
+                        // Clear any existing error messages
+                        $('.alert-danger').remove();
+                        // Ensure we have a valid redirect path
+                        const redirectPath = response.redirect || '/';
+                        window.location.href = redirectPath;
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Login error:', {xhr, status, error});
+                        // Re-enable submit button
+                        submitButton.prop('disabled', false);
+
                         if (xhr.status === 419) {
-                            // CSRF token mismatch, refresh the page
-                            window.location.reload();
+                            // CSRF token mismatch, refresh the page and token
+                            $.get('/csrf-token', function(data) {
+                                $('meta[name="csrf-token"]').attr('content', data.token);
+                                alert('Session expired. Please try logging in again.');
+                            });
+                        } else if (xhr.status === 422) {
+                            // Validation error
+                            const errors = xhr.responseJSON.errors;
+                            let errorMessage = '';
+                            for (const field in errors) {
+                                errorMessage += errors[field].join('\n') + '\n';
+                            }
+                            // Show error message in the form
+                            $('.login-form').prepend(
+                                $('<div class="alert alert-danger"></div>').text(errorMessage || 'Login failed. Please check your credentials.')
+                            );
                         } else {
                             // Handle other errors
-                            alert('Login failed. Please try again.');
+                            $('.login-form').prepend(
+                                $('<div class="alert alert-danger"></div>').text('Login failed. Please try again.')
+                            );
                         }
                     }
                 });

@@ -8,14 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, ...$roles)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!$request->user()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        if (!in_array($request->user()->role, $roles)) {
-            return response()->json(['error' => 'Forbidden'], 403);
+        if (!$request->user() || $request->user()->role !== $role) {
+            abort(403, 'Unauthorized action.');
         }
 
         return $next($request);

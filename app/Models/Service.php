@@ -17,6 +17,7 @@ class Service extends Model
         'laundry_id',
         'name',
         'description',
+        'price'
     ];
 
     public function laundry(): BelongsTo
