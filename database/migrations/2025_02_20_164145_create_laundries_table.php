@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('address');
             $table->string('phone');
+            $table->string('email');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

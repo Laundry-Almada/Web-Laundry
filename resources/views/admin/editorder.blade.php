@@ -8,6 +8,8 @@
             @csrf
             @method('PUT')
 
+            <input type="hidden" name="laundry_id" value="{{ $order->laundry_id }}">
+
             <div class="form-group mb-3">
                 <label for="customer_id">Pelanggan:</label>
                 <select class="form-control" id="customer_id" name="customer_id" required>
@@ -20,22 +22,13 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="laundry_id">Laundry:</label>
-                <select class="form-control" id="laundry_id" name="laundry_id" required>
-                    @foreach($laundries as $laundry)
-                        <option value="{{ $laundry->id }}" {{ $order->laundry_id == $laundry->id ? 'selected' : '' }}>
-                            {{ $laundry->nama_pelanggan }}
+                <label for="service_id">Service:</label>
+                <select class="form-control" id="service_id" name="service_id" required>
+                    @foreach($services as $service)
+                        <option value="{{ $service->id }}" {{ $order->service_id == $service->id ? 'selected' : '' }}>
+                            {{ $service->name }} ({{ $service->laundry->name }})
                         </option>
                     @endforeach
-                </select>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="type">Jenis Layanan:</label>
-                <select class="form-control" id="type" name="type" required>
-                    <option value="Cuci Kering" {{ $order->type == 'Cuci Kering' ? 'selected' : '' }}>Cuci Kering</option>
-                    <option value="Cuci Setrika" {{ $order->type == 'Cuci Setrika' ? 'selected' : '' }}>Cuci Setrika</option>
-                    <option value="Setrika Saja" {{ $order->type == 'Setrika Saja' ? 'selected' : '' }}>Setrika Saja</option>
                 </select>
             </div>
 
@@ -51,7 +44,7 @@
 
             <div class="form-group mb-3">
                 <label for="order_date">Tanggal Order:</label>
-                <input type="date" class="form-control" id="order_date" name="order_date" value="{{ $order->order_date }}" required>
+                <input type="datetime-local" class="form-control" id="order_date" name="order_date" value="{{ date('Y-m-d\TH:i', strtotime($order->order_date)) }}" required>
             </div>
 
             <div class="form-group mb-3">
@@ -62,10 +55,13 @@
             <div class="form-group mb-4">
                 <label for="status">Status:</label>
                 <select class="form-control" id="status" name="status" required>
-                    <option value="Menunggu" {{ $order->status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
-                    <option value="Diproses" {{ $order->status == 'Diproses' ? 'selected' : '' }}>Diproses</option>
-                    <option value="Selesai" {{ $order->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                    <option value="Diambil" {{ $order->status == 'Diambil' ? 'selected' : '' }}>Diambil</option>
+                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                    <option value="washed" {{ $order->status == 'washed' ? 'selected' : '' }}>Dicuci</option>
+                    <option value="dried" {{ $order->status == 'dried' ? 'selected' : '' }}>Dikeringkan</option>
+                    <option value="ironed" {{ $order->status == 'ironed' ? 'selected' : '' }}>Disetrika</option>
+                    <option value="ready_picked" {{ $order->status == 'ready_picked' ? 'selected' : '' }}>Siap Diambil</option>
+                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Selesai</option>
+                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                 </select>
             </div>
 

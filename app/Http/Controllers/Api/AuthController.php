@@ -20,7 +20,7 @@ class AuthController extends BaseController
             'email' => 'required|email',
             'password' => 'required',
             'c_password' => 'required|same:password',
-            'role' => 'required|string|in:owner,staff',
+            'role' => 'required|string|in:admin,staff',
             'laundry_id' => 'required|exists:laundries,id'
         ]);
 
@@ -61,7 +61,7 @@ class AuthController extends BaseController
             $tokenName = $user->name . '-' . $user->role . '-android-laundry-' . Carbon::now()->translatedFormat('d-m-Y-H-i-s');
 
             // Determine dashboard route based on role
-            $dashboardRoute = $user->role === 'owner' ? '/admin/dashboard' : '/home';
+            $dashboardRoute = $user->role === 'admin' ? '/admin/dashboard' : '/home';
 
             $success = [
                 'token' => $user->createToken($tokenName)->plainTextToken,
@@ -127,7 +127,7 @@ class AuthController extends BaseController
                 'name' => 'sometimes|required',
                 'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
                 'password' => 'sometimes|required',
-                // 'role' => 'sometimes|required|string|in:owner,staff',
+                // 'role' => 'sometimes|required|string|in:admin,staff',
                 // 'laundry_id' => 'sometimes|required|exists:laundries,id',
             ]);
 
