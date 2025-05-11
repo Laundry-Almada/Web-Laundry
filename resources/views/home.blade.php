@@ -25,7 +25,7 @@
             <div class="v292_622"></div>
             <div class="v292_623"></div>
             <div class="v292_624"></div>
-            <div class="v292_625"></div><a href="{{ route('about') }}"><span class="v292_626">ABOUT US</span></a><a href="{{ route('services') }}"><span class="v292_627">SERVICES</span></a><a href="{{ route('pricing') }}"><span class="v292_628">PRICING</span></a><span class="v292_629">CONTACT</span>
+            <div class="v292_625"></div><a href="{{ route('about') }}"><span class="v292_626">ABOUT US</span></a><a href="{{ route('services') }}"><span class="v292_627">TRACKING ORDER</span></a><a href="{{ route('pricing') }}"><span class="v292_628">PRICING</span></a><span class="v292_629">CONTACT</span>
         </div>
         <div class="v292_630">
             <div class="v292_631">

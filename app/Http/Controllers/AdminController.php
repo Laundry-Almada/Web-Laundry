@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Laundry;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +25,8 @@ class AdminLaundryController extends Controller
     public function create()
     {
         Log::info('Loading form to create new laundry.');
-        return view('adminlaundry.create');
+        $services = Service::all();
+        return view('adminlaundry.create', compact('services'));
     }
 
     public function store(Request $request)
@@ -32,20 +34,20 @@ class AdminLaundryController extends Controller
         Log::info('Storing new laundry data.');
 
         $request->validate([
-            'nama_pelanggan' => 'required|string|max:255',
+            'laundry_name' => 'required|string|max:255',
             'alamat' => 'required|string',
             'nomor_telepon' => 'required|string|max:15',
-            'layanan' => 'required|string',
+            'service_name' => 'required|string',
             'berat' => 'required|numeric|min:0',
             'status' => 'required|in:Menunggu,Proses,Selesai,Diambil',
         ]);
 
         try {
             $laundry = new Laundry();
-            $laundry->nama_pelanggan = $request->nama_pelanggan;
+            $laundry->laundry_name = $request->laundry_name;
             $laundry->alamat = $request->alamat;
             $laundry->nomor_telepon = $request->nomor_telepon;
-            $laundry->layanan = $request->layanan;
+            $laundry->service_name = $request->service_name;
             $laundry->berat = $request->berat;
             $laundry->status = $request->status;
             $laundry->save();
@@ -65,7 +67,8 @@ class AdminLaundryController extends Controller
 
         try {
             $laundry = Laundry::findOrFail($id);
-            return view('adminlaundry.edit', compact('laundry'));
+            $services = Service::all();
+            return view('adminlaundry.edit', compact('laundry', 'services'));
         } catch (\Exception $e) {
             Log::error('Gagal mengambil data laundry: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal mengambil data laundry.');
@@ -77,20 +80,20 @@ class AdminLaundryController extends Controller
         Log::info('Updating laundry with ID: ' . $id);
 
         $request->validate([
-            'nama_pelanggan' => 'required|string|max:255',
+            'laundry_name' => 'required|string|max:255',
             'alamat' => 'required|string',
             'nomor_telepon' => 'required|string|max:15',
-            'layanan' => 'required|string',
+            'service_name' => 'required|string',
             'berat' => 'required|numeric|min:0',
             'status' => 'required|in:Menunggu,Proses,Selesai,Diambil',
         ]);
 
         try {
             $laundry = Laundry::findOrFail($id);
-            $laundry->nama_pelanggan = $request->nama_pelanggan;
+            $laundry->laundry_name = $request->laundry_name;
             $laundry->alamat = $request->alamat;
             $laundry->nomor_telepon = $request->nomor_telepon;
-            $laundry->layanan = $request->layanan;
+            $laundry->service_name = $request->service_name;
             $laundry->berat = $request->berat;
             $laundry->status = $request->status;
             $laundry->save();

@@ -28,7 +28,7 @@
                     <div class="row mb-3">
                         <div class="col-md-4 fw-bold">Status:</div>
                         <div class="col-md-8">
-                            <span class="badge bg-{{ $order->status === 'pending' ? 'warning' : ($order->status === 'processing' ? 'info' : ($order->status === 'ready_picked' ? 'success' : 'secondary')) }}">
+                            <span class="badge bg-{{ $order->status === 'Menunggu' ? 'warning' : ($order->status === 'DiProses' ? 'info' : ($order->status === 'Dapat Diambil' ? 'success' : 'secondary')) }}">
                                 {{ ucfirst(str_replace('_', ' ', $order->status)) }}
                             </span>
                         </div>

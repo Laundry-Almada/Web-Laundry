@@ -165,9 +165,6 @@
       <div class="sidebar-menu">
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fas fa-chart-pie"></i> Dashboard</a>
         <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders') ? 'active' : '' }}"><i class="fas fa-list"></i> Order</a>
-        <a href="#"><i class="fas fa-comments"></i> Message</a>
-        <a href="#"><i class="fas fa-user"></i> Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Setting</a>
       </div>
       <div class="logout-btn">
         <form method="POST" action="{{ route('logout') }}">

@@ -14,53 +14,78 @@
     <div class="v292_752">
         <div class="v292_753">
             <div class="v292_754"></div>
-            <div class="v292_755"></div><span class="v292_756">Home / Services</span><span class="v292_757">SERVICES</span>
+            <div class="v292_755"></div>
+            <span class="v292_757">TRACKING ORDER</span>
         </div>
         <div class="v292_758">
-            <div class="v292_759"></div><span class="v292_760">ALMADA LAUNDRY</span>
-            <div class="v292_761"></div><a href="{{ route('home') }}"><span class="v292_762">HOME</span></a>
+            <div class="v292_759"></div>
+            <span class="v292_760">ALMADA LAUNDRY</span>
+            <div class="v292_761"></div>
+            <a href="{{ route('home') }}"><span class="v292_762">HOME</span></a>
             <div class="v292_763"></div>
             <div class="v292_764"></div>
             <div class="v292_765"></div>
-            <div class="v292_766"></div><a href="{{ route('about') }}"><span class="v292_767">ABOUT US</span></a><a href="{{ route('services') }}"><span class="v292_768">SERVICES</span></a><a href="{{ route('pricing') }}"><span class="v292_769">PRICING</span></a><span class="v292_770">CONTACT</span>
+            <div class="v292_766"></div>
+            <a href="{{ route('about') }}"><span class="v292_767">ABOUT US</span></a>
+            <a href="{{ route('services') }}"><span class="v292_768">TRACKING ORDER</span></a>
+            <a href="{{ route('pricing') }}"><span class="v292_769">PRICING</span></a>
+            <span class="v292_770">CONTACT</span>
         </div>
-        <div class="v292_783">
-            <div class="v292_784"><span class="v292_785">Get In Touch</span>
-                <div class="name"></div>
-                <div class="v292_787"></div>
-                <div class="v292_788">
-                    <div class="name"></div>
-                </div><span class="v292_790">Phone
-                    +62 812345678</span>
-                <div class="v292_791"></div><span class="v292_792">Email
-                    almadalaundry@gmail.com</span><span class="v292_793">Website
-                    www.almadalaundry.com</span><span class="v292_794">Address
-                    Jl. Sampangan No.92, Semanggi,
-                    Kec. Ps. Kliwon, Kota Surakarta,
-                    Jawa Tengah 57191</span>
-                <div class="name"></div>
+
+        <!-- My Orders Section -->
+        <div class="order-status-card">
+            <h3>Orders</h3>
+
+            <!-- Table Scrollable -->
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Laundry</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($orders as $order)
+                        <tr>
+                            <td>{{ $order->customer->name ?? '-' }}</td>
+                            <td>{{ $order->laundry->nama_pelanggan ?? '-' }}</td>
+                            <td>{{ $order->status }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            <div class="v292_796"><span class="v292_797">ALMADA LAUNDRY</span><span class="v292_798">Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit.
-                    Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit.
-                </span>
-                <div class="name"></div>
+        </div>
+
+        <div class="v292_783">
+            <div class="v292_784">
+                <span class="v292_785">Get In Touch</span>
+                <div class="v292_787"></div>
+                <div class="v292_788"></div>
+                <span class="v292_790">Phone +62 812345678</span>
+                <div class="v292_791"></div>
+                <span class="v292_792">Email almadalaundry@gmail.com</span>
+                <span class="v292_793">Website www.almadalaundry.com</span>
+                <span class="v292_794">Address Jl. Sampangan No.92, Semanggi, Kec. Ps. Kliwon, Kota Surakarta, Jawa Tengah 57191</span>
+            </div>
+            <div class="v292_796">
+                <span class="v292_797">ALMADA LAUNDRY</span>
+                <span class="v292_798">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
                 <div class="v292_800">
                     <div class="v292_801"></div>
                     <div class="v292_802"></div>
                 </div>
-                <div class="name"></div>
             </div>
         </div>
-        <div class="v347_135"><span class="v347_136">SERVICES</span><span class="v347_137">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </span></div>
+
         <div class="v349_324">
-            <div class="v349_325"></div><span class="v349_326">Phone +62 812345678</span><span class="v349_327">Email almadalaundry@gmail.com</span>
+            <div class="v349_325"></div>
+            <span class="v349_326">Phone +62 812345678</span>
+            <span class="v349_327">Email almadalaundry@gmail.com</span>
             <div class="v349_328"></div>
-            <div class="v349_329">
-                <div class="name"></div>
-            </div>
+            <div class="v349_329"></div>
             <a href="{{ route('login') }}">
                 <div class="v349_331">
                     <div class="v349_332"></div><span class="v349_333">LOGIN</span>
@@ -71,19 +96,81 @@
                     <div class="v349_335"></div><span class="v349_336">REGISTER</span>
                 </div>
             </a>
-            <!-- <div class="v349_331">
-                <div class="v349_332"></div><span class="v349_333">LOGIN</span>
-            </div>
-            <div class="v349_334">
-                <div class="v349_335"></div><span class="v349_336">REGISTER</span>
-            </div> -->
         </div>
     </div>
 </body>
 
 </html>
 
-<style>
+    <style>
+        /* Table wrapper agar bisa discroll */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Scrollbar style */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        /* Styling tabel */
+        table.table {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(78, 74, 74, 0.1);
+        }
+
+        table.table th,
+        table.table td {
+            padding: 12px 15px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid #ddd;
+        }
+
+        table.table th {
+            background-color:rgb(113, 164, 201);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 16px;
+            border-top: 2px solid #333;
+        }
+
+        table.table td {
+            background-color:rgb(255, 255, 255);
+            color: #333;
+            font-size: 14px;
+        }
+
+        table.table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        table.table tr:hover td {
+            background-color:rgb(255, 255, 255);
+            cursor: pointer;
+        }
+
+        table.table td:nth-child(6) {
+            color: #5293c2;
+            font-weight: bold;
+        }
     * {
         box-sizing: border-box;
     }
@@ -745,4 +832,117 @@
         opacity: 1;
         text-align: center;
     }
+
+
+.order-status-card {
+    width: 80%;
+    max-width: 1000px;
+    margin: 400px auto 0;
+    background-color: #f9f9f9;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+}
+
+.order-status-card h3 {
+    font-size: 28px;
+    color: #00487c;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.order-box {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    background-color: #ffffff;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.order-header h4 {
+    margin: 0 0 8px;
+    color: #00487c;
+}
+
+.order-progress {
+    text-align: center;
+}
+
+.progress-bar {
+    width: 120px;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 5px 0 0 5px;
+}
+
+.order-estimate {
+    text-align: center;
+    color: #555;
+}
+
+.order-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0;
+    justify-content: space-between;
+}
+
+.step {
+    flex: 1;
+    min-width: 100px;
+    padding: 8px;
+    text-align: center;
+    background-color: #d9e7f2;
+    color: #00487c;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.step.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pickup-button {
+    text-align: center;
+    margin: 16px 0;
+}
+
+.pickup-button button {
+    background-color: #00487c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.minimize-text {
+    text-align: center;
+    color: #555;
+    margin-top: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 </style>
+
+
+

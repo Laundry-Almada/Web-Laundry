@@ -25,7 +25,7 @@
             <div class="v292_486"></div>
             <div class="v292_487"></div>
             <a href="{{ route('about') }}"><span class="v292_488">ABOUT US</span></a>
-            <a href="{{ route('services') }}"><span class="v292_489">SERVICES</span></a>
+            <a href="{{ route('services') }}"><span class="v292_489">TRACKING ORDER</span></a>
             <a href="{{ route('pricing') }}"><span class="v292_490">PRICING</span></a>
             <a href="#contact"><span class="v292_491">CONTACT</span></a>
         </div>
