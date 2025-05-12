@@ -27,8 +27,9 @@
             <div class="v292_765"></div>
             <div class="v292_766"></div><a href="{{ route('about') }}"><span class="v292_767">ABOUT US</span></a><a
                 href="{{ route('services') }}"><span class="v292_768">SERVICES</span></a><a
-                href="{{ route('pricing') }}"><span class="v292_769">PRICING</span></a><span
-                class="v292_770">CONTACT</span>
+                href="{{ route('pricing') }}"><span class="v292_769">PRICING</span></a><a
+                href="{{ route('contact') }}"><span class="v292_770">CONTACT</span></a>
+
         </div>
         <div class="v292_783">
             <div class="v292_784"><span class="v292_785">Get In Touch</span>
@@ -80,12 +81,6 @@
                     <div class="v349_335"></div><span class="v349_336">REGISTER</span>
                 </div>
             </a>
-            <!-- <div class="v349_331">
-                <div class="v349_332"></div><span class="v349_333">LOGIN</span>
-            </div>
-            <div class="v349_334">
-                <div class="v349_335"></div><span class="v349_336">REGISTER</span>
-            </div> -->
         </div>
     </div>
 </body>

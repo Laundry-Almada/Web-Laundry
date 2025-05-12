@@ -30,3 +30,6 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 
 // Include auth.php routes
 require __DIR__.'/auth.php';
+
+Route::view('/contact', 'contact')->name('contact');
+

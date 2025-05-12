@@ -19,10 +19,11 @@
     {{-- <div class="container"> --}}
     <div class="v292_610">
         <div class="content-wrapper">
-            <div class="v292_611"><span class="v292_612">WELCOME!</span><span class="v292_613">Selamat datang di Almada Laundry! 
-            Kami menyediakan layanan laundry 
-            berkualitas dengan harga yang terjangkau 
-            dan pelayanan yang ramah. 
+            <div class="v292_611"><span class="v292_612">WELCOME!</span><span class="v292_613">Selamat datang di Almada
+                    Laundry!
+                    Kami menyediakan layanan laundry
+                    berkualitas dengan harga yang terjangkau
+                    dan pelayanan yang ramah.
                 </span>
                 <div class="v292_614"></div><span class="v292_615">Cek Laundry Kamu</span>
                 <div class="v292_616"></div>
@@ -35,8 +36,9 @@
                 <div class="v292_624"></div>
                 <div class="v292_625"></div><a href="{{ route('about') }}"><span class="v292_626">ABOUT US</span></a><a
                     href="{{ route('services') }}"><span class="v292_627">SERVICES</span></a><a
-                    href="{{ route('pricing') }}"><span class="v292_628">PRICING</span></a><span
-                    class="v292_629">CONTACT</span>
+                    href="{{ route('pricing') }}"><span class="v292_628">PRICING</span></a><a
+                    href="{{ route('contact') }}"><span class="v292_629">CONTACT</span></a>
+
             </div>
             <div class="v292_630">
                 <div class="v292_631">
@@ -63,16 +65,18 @@
                 </div>
                 <div class="v349_128"></div><span class="v349_129">WHY CHOOSE US ?</span>
                 <div class="v349_131"></div><span class="v349_132">Kami memberikan pelayanan
-                    lebih personal dengan 
-                    hubungan yang akrab bersama 
-                    pelanggan. Kamu bisa 
-                    mengecek status cucian kapan 
+                    lebih personal dengan
+                    hubungan yang akrab bersama
+                    pelanggan. Kamu bisa
+                    mengecek status cucian kapan
                     saja, bahkan di luar jam kerja.
-                </span><span class="v349_133">Personalized Service</span><span class="v349_134">Affordable and Competitive Pricing</span><span
-                    class="v349_135">Fast Service</span><span class="v349_136">Customer Trust</span><span
-                    class="v349_137">Harga yang terjangkau untuk berbagai layanan laundry, mulai dari cuci baju hingga dry cleaning.
+                </span><span class="v349_133">Personalized Service</span><span class="v349_134">Affordable and
+                    Competitive Pricing</span><span class="v349_135">Fast Service</span><span class="v349_136">Customer
+                    Trust</span><span class="v349_137">Harga yang terjangkau untuk berbagai layanan laundry, mulai dari
+                    cuci baju hingga dry cleaning.
                 </span><span class="v349_138">Layanan ekspres yang memungkinkan cucian kamu selesai dalam 1 hari.
-                </span><span class="v349_139">Pelanggan kami selalu puas dengan keramahan dan kecepatan layanan kami, termasuk pelanggan dari Grand Amira Hotel dan Hotel NEO Gading Solo.
+                </span><span class="v349_139">Pelanggan kami selalu puas dengan keramahan dan kecepatan layanan kami,
+                    termasuk pelanggan dari Grand Amira Hotel dan Hotel NEO Gading Solo.
                 </span>
             </div>
             <div class="v292_649">
@@ -99,11 +103,11 @@
                 </span><span class="v292_664">Cuci Baju Reguler</span>
                 <div class="v292_666"></div>
                 <div class="v292_667"></div><span class="v292_668">Cuci Ekspres
-                </span><span
-                    class="v292_669">Dry Cleaning</span>
+                </span><span class="v292_669">Dry Cleaning</span>
                 <div class="v292_672"></div>
-                <div class="v292_673"></div><span class="v292_674">Setrika Ekspres</span><span
-                    class="v292_675">Cuci Karpet, Cuci Gordain, Cuci Sepatu, Cuci Boneka</span><span class="v292_676">Natur (Mengembalikan Warna Pakaian)</span>
+                <div class="v292_673"></div><span class="v292_674">Setrika Ekspres</span><span class="v292_675">Cuci
+                    Karpet, Cuci Gordain, Cuci Sepatu, Cuci Boneka</span><span class="v292_676">Natur (Mengembalikan
+                    Warna Pakaian)</span>
                 <div class="v292_680"></div>
                 <div class="v292_681"></div>
                 <div class="v292_682"></div>
@@ -124,12 +128,13 @@
                         Jawa Tengah 57191</span>
                     <div class="name"></div>
                 </div>
-                <div class="v292_696"><span class="v292_697">ALMADA LAUNDRY</span><span class="v292_698">Almada Laundry adalah penyedia layanan 
-                    laundry terpercaya dengan pelayanan cepat, 
-                    ramah, dan kualitas terbaik. Kami berkomitmen 
-                    untuk memberikan kenyamanan kepada setiap 
-                    pelanggan, dengan berbagai layanan yang 
-                    dapat disesuaikan dengan kebutuhan Anda.
+                <div class="v292_696"><span class="v292_697">ALMADA LAUNDRY</span><span class="v292_698">Almada
+                        Laundry adalah penyedia layanan
+                        laundry terpercaya dengan pelayanan cepat,
+                        ramah, dan kualitas terbaik. Kami berkomitmen
+                        untuk memberikan kenyamanan kepada setiap
+                        pelanggan, dengan berbagai layanan yang
+                        dapat disesuaikan dengan kebutuhan Anda.
                     </span>
                     <div class="name"></div>
                     <div class="v292_700">
@@ -142,9 +147,9 @@
             <div class="v292_704">
                 <div class="v292_705"></div><span class="v292_706">PICK-UP AND DELIVERY ORDERS</span><span
                     class="v292_707">250+</span><span class="v292_708">2000+</span><span
-                    class="v292_709">1000+</span><span class="v292_710">500+</span><span
-                    class="v292_711">LAUNDRY LOADS PROCESSED</span><span class="v292_712">CUSTOMERS</span><span
-                    class="v292_713">POSITIVE REVIEWS</span>
+                    class="v292_709">1000+</span><span class="v292_710">500+</span><span class="v292_711">LAUNDRY
+                    LOADS PROCESSED</span><span class="v292_712">CUSTOMERS</span><span class="v292_713">POSITIVE
+                    REVIEWS</span>
                 <div class="v292_714"></div>
                 <div class="v292_715"></div>
                 <div class="v292_716"></div>
@@ -171,5 +176,3 @@
     </div>
     {{-- </div> --}}
 </body>
-
-
