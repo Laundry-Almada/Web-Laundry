@@ -13,8 +13,7 @@
 
 <body>
     <div class="v292_610">
-        <div class="v292_611"><span class="v292_612">WELCOME!</span><span class="v292_613">Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit.
+        <div class="v292_611"><span class="v292_612">WELCOME!</span><span class="v292_613">Kami menyediakan layanan laundry berkualitas dengan harga yang terjangkau!
             </span>
             <div class="v292_614"></div><span class="v292_615">Cek Laundry Kamu</span>
             <div class="v292_616"></div>

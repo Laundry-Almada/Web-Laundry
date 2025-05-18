@@ -1,78 +1,91 @@
 @extends('layouts.appadmin')
 
+@section('title', 'Tambah Order')
+
 @section('content')
-<section class="vh-100 bg-light">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow rounded">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Tambah Order Baru</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('admin.storeOrder') }}">
-                            @csrf
+<div class="container mt-4">
+    <h2 class="mb-4">Tambah Order</h2>
 
-                    <div class="mb-3">
-                        <label for="customer_name" class="form-label">Nama Pelanggan</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-                    </div>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-                            <div class="mb-3">
-                                <label for="type" class="form-label">Jenis Layanan</label>
-                                <select class="form-select" id="type" name="type" required>
-                                    <option disabled selected>Pilih Jenis Layanan</option>
-                                    <option value="Cuci Karpet">Cuci Karpet</option>
-                                    <option value="Cuci Jas">Cuci Jas</option>
-                                    <option value="Cuci Baju Reguler">Cuci Baju Reguler</option>
-                                    <option value="Cuci Baju Express (1 Hari)">Cuci Baju Express (1 Hari)</option>
-                                    <option value="Setrika Reguler">Setrika Reguler</option>
-                                    <option value="Setrika Express (1 Hari)">Setrika Express (1 Hari)</option>
-                                    <option value="Cuci Gorden">Cuci Gorden</option>
-                                    <option value="Natur">Natur</option>
-                                    <option value="Cuci Sepatu">Cuci Sepatu</option>
-                                    <option value="Cuci Boneka">Cuci Boneka</option>
-                                    <option value="Dry Cleaning">Dry Cleaning</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="weight" class="form-label">Berat (Kg)</label>
-                                <input type="number" class="form-control" id="weight" name="weight" step="0.1" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="total_price" class="form-label">Total Harga (Rp)</label>
-                                <input type="number" class="form-control" id="total_price" name="total_price" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="order_date" class="form-label">Tanggal Order</label>
-                                <input type="date" class="form-control" id="order_date" name="order_date" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="note" class="form-label">Catatan</label>
-                                <textarea class="form-control" id="note" name="note" rows="3" placeholder="Opsional..."></textarea>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option value="Menunggu">Menunggu</option>
-                                    <option value="Diproses">Diproses</option>
-                                    <option value="Diambil">Dapat Diambil</option>
-                                </select>
-                            </div>
-
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Tambah Order</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Terjadi kesalahan:</strong>
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
-    </div>
-</section>
+    @endif
+
+    <form action="{{ route('admin.storeOrder') }}" method="POST">
+        @csrf
+
+        <div class="mb-3">
+            <label for="customer_id" class="form-label">Customer</label>
+            <select name="customer_id" class="form-select" required>
+                <option value="">-- Pilih Customer --</option>
+                @foreach($customers as $customer)
+                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="laundry_id" class="form-label">Laundry</label>
+            <select name="laundry_id" class="form-select" required>
+                <option value="">-- Pilih Laundry --</option>
+                @foreach($laundries as $laundry)
+                    <option value="{{ $laundry->id }}">{{ $laundry->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="order_date" class="form-label">Tanggal Order</label>
+            <input type="date" name="order_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="service_id" class="form-label">Jenis Layanan</label>
+            <select name="service_id" class="form-select" required>
+                <option value="">-- Pilih Jenis --</option>
+                @foreach($services as $service)
+                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="weight" class="form-label">Berat (Kg)</label>
+            <input type="number" step="0.1" name="weight" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="total_price" class="form-label">Total Harga (Rp)</label>
+            <input type="number" name="total_price" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" class="form-select" required>
+                <option value="pending">Menunggu</option>
+                <option value="processing">Diproses</option>
+                <option value="ready_picked">Siap Diambil</option>
+                <option value="completed">Selesai</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="note" class="form-label">Catatan</label>
+            <textarea name="note" class="form-control" rows="3" placeholder="Catatan tambahan (opsional)"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Kembali</a>
+    </form>
+</div>
 @endsection

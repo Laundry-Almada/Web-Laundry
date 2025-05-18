@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+
+    public function showCreateOrderForm()
+{
+    $customers = Customer::all();
+    $laundries = Laundry::all();
+    $services = Service::all();
+
+    return view('admin.tambahorder', compact('customers', 'laundries', 'services'));
+}
+
     public function dashboard()
     {
         try {
@@ -72,10 +82,10 @@ class AdminController extends Controller
 
             // Data untuk grafik status order
             $orderStatusData = [
-                'pending' => $pendingOrders,
-                'processing' => $processingOrders,
-                'ready_picked' => $readyPickedOrders,
-                'completed' => $completedOrders
+                'Menunggu' => $pendingOrders,
+                'Sedang Diproses' => $processingOrders,
+                'Dapat Diambil' => $readyPickedOrders,
+                'Selesai' => $completedOrders
             ];
 
             return view('admin.dashboard', compact(
@@ -130,5 +140,50 @@ class AdminController extends Controller
                 'orderStatusData'
             ));
         }
+    }
+
+        // Create Order
+    public function createOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'laundry_id' => 'required|exists:laundries,id',
+            'service_id' => 'required|exists:services,id',
+            'weight' => 'required|numeric|min:0.1',
+            'status' => 'required|in:pending,processing,ready_picked,completed',
+            'total_price' => 'required|numeric|min:0'
+        ]);
+
+        $order = Order::create($validated);
+
+        return redirect()->back()->with('success', 'Order berhasil ditambahkan.');
+    }
+
+    // Update Order
+    public function updateOrder(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'laundry_id' => 'required|exists:laundries,id',
+            'service_id' => 'required|exists:services,id',
+            'weight' => 'required|numeric|min:0.1',
+            'status' => 'required|in:pending,processing,ready_picked,completed',
+            'total_price' => 'required|numeric|min:0'
+        ]);
+
+        $order->update($validated);
+
+        return redirect()->back()->with('success', 'Order berhasil diperbarui.');
+    }
+
+    // Delete Order
+    public function deleteOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
+
+        return redirect()->back()->with('success', 'Order berhasil dihapus.');
     }
 }

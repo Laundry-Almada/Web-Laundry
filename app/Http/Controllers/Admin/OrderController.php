@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Models\Laundry;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -28,7 +29,8 @@ class OrderController extends Controller
         Log::info('Mengakses halaman tambah order');
         $customers = Customer::all();
         $laundries = Laundry::all();
-        return view('admin.tambahorder', compact('customers', 'laundries'));
+        $services = Service::all();
+        return view('admin.tambahorder', compact('customers', 'laundries', 'services'));
     }
 
     public function store(Request $request)
