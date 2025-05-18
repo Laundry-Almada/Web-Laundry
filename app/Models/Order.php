@@ -14,6 +14,7 @@ class Order extends Model
         'customer_id',
         'laundry_id',
         'service_id',
+        'jenis',
         'status',
         'barcode',
         'weight',

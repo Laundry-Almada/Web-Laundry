@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function index()
     {
         Log::info('Mengakses halaman daftar order');
-        $orders = Order::with(['customer', 'laundry'])->latest()->get();
+        $orders = Order::with(['customer', 'laundry', 'service'])->latest()->get();
         return view('admin.dataorder', compact('orders'));
     }
 

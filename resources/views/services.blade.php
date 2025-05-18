@@ -42,7 +42,8 @@
                     <thead>
                         <tr>
                             <th>Customer</th>
-                            <th>Laundry</th>
+                            <th>Laundry ID</th>
+                            <th>Jenis</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -50,7 +51,8 @@
                         @foreach($orders as $order)
                         <tr>
                             <td>{{ $order->customer->name ?? '-' }}</td>
-                            <td>{{ $order->laundry->nama_pelanggan ?? '-' }}</td>
+                            <td>{{ $order->laundry_id ?? '-' }}</td>
+                            <td>{{ $order->jenis ?? '-' }}</td>
                             <td>{{ $order->status }}</td>
                         </tr>
                         @endforeach

@@ -156,10 +156,26 @@ class DatabaseSeeder extends Seeder
                     ''  // Empty notes are more likely
                 ];
 
+                // Jenis layanan
+                $jenisOptions = [
+                    "Cuci Karpet",
+                    "Cuci Jas",
+                    "Cuci Baju Reguler",
+                    "Cuci Baju Express (1 Hari)",
+                    "Setrika Reguler",
+                    "Setrika Express (1 Hari)",
+                    "Cuci Gorden",
+                    "Natur",
+                    "Cuci Sepatu",
+                    "Cuci Boneka",
+                    "Dry Cleaning"
+                ];
+
                 Order::create([
                     'customer_id' => $customer->id,
                     'laundry_id' => $laundry->id,
                     'service_id' => $service->id,
+                    'jenis' => $faker->randomElement($jenisOptions),
                     'barcode' => 'ORD-' . strtoupper(uniqid()),
                     'order_date' => $orderTime,
                     'status' => $status,

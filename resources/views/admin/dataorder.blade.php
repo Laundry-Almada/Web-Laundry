@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-5 pt-5">
     <h2>Data Order</h2>
-    
+
     <!-- Button to Add Order -->
     <a href="{{ route('admin.tambahOrder') }}" class="btn btn-success mb-3">Tambah Order</a>
 
@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th>Customer</th>
-                <th>Laundry</th>
+                <th>Laundry ID</th>
                 <th>Tanggal Order</th>
                 <th>Jenis</th>
                 <th>Berat (Kg)</th>
@@ -25,9 +25,9 @@
             @foreach($orders as $order)
             <tr>
                 <td>{{ $order->customer->name ?? '-' }}</td>
-                <td>{{ $order->laundry->nama_pelanggan ?? '-' }}</td>
+                <td>{{ $order->laundry_id ?? '-' }}</td>
                 <td>{{ $order->order_date }}</td>
-                <td>{{ $order->type }}</td>
+                <td>{{ $order->jenis ?? '-' }}</td>
                 <td>{{ $order->weight }}</td>
                 <td>Rp{{ number_format($order->total_price, 0, ',', '.') }}</td>
                 <td>{{ $order->status }}</td>
