@@ -138,6 +138,24 @@ class DatabaseSeeder extends Seeder
                 $status = $faker->randomElement($statuses);
                 $orderTime = $currentDate->copy()->setHour(rand(7, 21))->setMinute(rand(0, 59));
                 $totalPrice = $faker->numberBetween(50000, 500000);
+
+                // Generate random notes
+                $noteOptions = [
+                    'Tolong cuci dengan lembut',
+                    'Pakaian sensitif warna',
+                    'Jangan gunakan pewangi terlalu banyak',
+                    'Pakaian anak, cuci terpisah',
+                    'Ada noda di bagian kerah, tolong dibersihkan',
+                    'Setrika dengan suhu rendah',
+                    'Pakaian formal, butuh perhatian khusus',
+                    'Tolong selesaikan secepatnya',
+                    'Ambil Jumat sore',
+                    'Baju putih dicuci terpisah',
+                    '',
+                    '',
+                    ''  // Empty notes are more likely
+                ];
+
                 Order::create([
                     'customer_id' => $customer->id,
                     'laundry_id' => $laundry->id,
@@ -147,6 +165,7 @@ class DatabaseSeeder extends Seeder
                     'status' => $status,
                     'weight' => $faker->randomFloat(2, 1, 10),
                     'total_price' => $totalPrice,
+                    'note' => $faker->randomElement($noteOptions),
                     'created_at' => $orderTime,
                     'updated_at' => $orderTime,
                 ]);
