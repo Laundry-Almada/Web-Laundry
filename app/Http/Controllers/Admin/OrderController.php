@@ -27,31 +27,104 @@ class OrderController extends Controller
     public function create()
     {
         Log::info('Mengakses halaman tambah order');
-        $customers = Customer::all();
-        $laundries = Laundry::all();
-        $services = Service::all();
-        return view('admin.tambahorder', compact('customers', 'laundries', 'services'));
+        $services = [
+            ['id' => 'kiloan', 'name' => 'Kiloan', 'price' => 7000],
+            ['id' => 'express', 'name' => 'Express', 'price' => 10000],
+            ['id' => 'satuan', 'name' => 'Satuan', 'price' => 5000],
+            ['id' => 'reguler', 'name' => 'Reguler', 'price' => 6000]
+        ];
+        return view('admin.tambahorder', compact('services'));
     }
 
     public function store(Request $request)
     {
         Log::info('Mencoba menambah order baru', ['data' => $request->all()]);
-        $validated = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'laundry_id' => 'required|exists:laundries,id',
-            'service_id' => 'required|exists:services,id',
-            'order_date' => 'required|date',
-            'weight' => 'required|numeric',
-            'total_price' => 'required|numeric',
-            'status' => 'required|string',
-            'note' => 'nullable|string'
-        ]);
 
-        $order = Order::create($validated);
-        Log::info('Berhasil menambah order baru', ['id' => $order->id]);
+        try {
+            $validated = $request->validate([
+                'customer_name' => 'required|string|max:255',
+                'service_id' => 'required|in:kiloan,express,satuan,reguler',
+                'order_date' => 'required|date',
+                'weight' => 'required|numeric|min:0.1',
+                'total_price' => 'required|numeric|min:0',
+                'status' => 'required|string|in:pending,processing,ready_picked,completed',
+                'note' => 'nullable|string|max:500'
+            ]);
 
-        return redirect()->route('admin.orders')
-            ->with('success', 'Order berhasil ditambahkan');
+            // Generate unique barcode
+            $barcode = 'LAU-' . strtoupper(uniqid());
+
+            // Get service price based on type
+            $servicePrices = [
+                'kiloan' => 7000,
+                'express' => 10000,
+                'satuan' => 5000,
+                'reguler' => 6000
+            ];
+
+            // Calculate total price if not provided
+            if (!isset($validated['total_price']) || $validated['total_price'] <= 0) {
+                $validated['total_price'] = $servicePrices[$validated['service_id']] * $validated['weight'];
+            }
+
+            // Create or find customer
+            $customer = Customer::firstOrCreate(
+                ['name' => $validated['customer_name']],
+                ['name' => $validated['customer_name']]
+            );
+
+            // Create or get default laundry
+            $laundry = Laundry::firstOrCreate(
+                ['name' => 'Default Laundry'],
+                [
+                    'name' => 'Default Laundry',
+                    'address' => 'Default Address',
+                    'phone' => '08123456789',
+                    'email' => 'default@laundry.com',
+                    'status' => 'active'
+                ]
+            );
+
+            // Create service if it doesn't exist
+            $service = Service::firstOrCreate(
+                [
+                    'laundry_id' => $laundry->id,
+                    'name' => ucfirst($validated['service_id'])
+                ],
+                [
+                    'price' => $servicePrices[$validated['service_id']],
+                    'description' => 'Layanan ' . ucfirst($validated['service_id'])
+                ]
+            );
+
+            // Create order
+            $order = Order::create([
+                'customer_id' => $customer->id,
+                'laundry_id' => $laundry->id,
+                'service_id' => $service->id,
+                'jenis' => ucfirst($validated['service_id']),
+                'status' => $validated['status'],
+                'barcode' => $barcode,
+                'weight' => $validated['weight'],
+                'total_price' => $validated['total_price'],
+                'note' => $validated['note'] ?? null,
+                'order_date' => $validated['order_date']
+            ]);
+
+            Log::info('Berhasil menambah order baru', ['id' => $order->id]);
+
+            return redirect()->route('admin.orders')
+                ->with('success', 'Order berhasil ditambahkan dengan barcode: ' . $barcode);
+        } catch (\Exception $e) {
+            Log::error('Gagal menambah order baru', [
+                'error' => $e->getMessage(),
+                'data' => $request->all()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan order: ' . $e->getMessage());
+        }
     }
 
     public function edit(Order $order)
