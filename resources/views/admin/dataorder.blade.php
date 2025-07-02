@@ -13,7 +13,7 @@
         color: #fff;
         text-align: center;
         padding: 12px;
-        border-radius: 00px 0px 0 0;
+        border-radius: 0px;
     }
 
     .custom-table td {
@@ -32,17 +32,13 @@
         border-radius: 0 10px 10px 0;
     }
 
-    .custom-table .text-end {
-        text-align: right;
-    }
-
     .badge {
         font-size: 0.8rem;
         padding: 0.4em 0.6em;
         border-radius: 10px;
     }
 
-    .btn-outline-primary, .btn-outline-danger {
+    .btn-outline-primary, .btn-outline-danger, .btn-outline-warning {
         font-size: 0.75rem;
         padding: 4px 8px;
         border-radius: 50px;
@@ -55,7 +51,7 @@
     .card-header {
         border-radius: 10px 10px 0 0;
     }
-    
+
     .bg-deep-blue {
         background-color: #0d3b66 !important;
     }
@@ -97,8 +93,7 @@
                                     'washed' => 'primary',
                                     'dried' => 'info',
                                     'ironed' => 'warning text-dark',
-                                    'ready_picked' => 'success',
-                                    'completed' => 'success',
+                                    'ready_picked', 'completed' => 'success',
                                     'cancelled' => 'danger',
                                     default => 'dark',
                                 };
@@ -113,9 +108,7 @@
                                     default => ucfirst($order->status),
                                 };
                             @endphp
-                            <span class="badge bg-{{ $badgeColor }} text-capitalize">
-                                {{ $statusIndo }}
-                            </span>
+                            <span class="badge bg-{{ $badgeColor }} text-capitalize">{{ $statusIndo }}</span>
                         </td>
                         <td>{{ $order->note ?? '-' }}</td>
                         <td>
@@ -135,44 +128,11 @@
                                     <i class="fas fa-trash"></i> Hapus
                                 </button>
                             </form>
-
-                            <!-- Modal Barcode (inline, simple) -->
-                            <div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
-                              <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="barcodeModalLabel">Barcode Order</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body text-center">
-                                    <img id="qrBarcodeImg" src="" alt="Barcode" style="height:200px; width:200px;">
-                                    <div class="mt-2"><span id="barcodeValue"></span></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-</script>
-@endpush
-<script>
-function showQrBarcode(orderId) {
-    var img = document.getElementById('qrBarcodeImg');
-    img.src = 'https://api.qrserver.com/v1/create-qr-code/?data=' + orderId + '&size=240x240';
-    document.getElementById('barcodeValue').innerText = orderId;
-    var modal = new bootstrap.Modal(document.getElementById('barcodeModal'));
-    modal.show();
-}
-</script>
-                        </td>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" style="background:#fff; color:#000;" class="text-center">Belum ada data order.</td>
+                        <td colspan="8" style="background:#fff; color:#000;" class="text-center">Belum ada data order.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -181,7 +141,32 @@ function showQrBarcode(orderId) {
     </div>
 </div>
 
+<!-- Modal Barcode (satu kali saja, di luar perulangan) -->
+<div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="barcodeModalLabel">Barcode Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="qrBarcodeImg" src="" alt="Barcode" style="height:200px; width:200px;">
+                <div class="mt-2"><span id="barcodeValue"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+    function showQrBarcode(orderId) {
+        var img = document.getElementById('qrBarcodeImg');
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?data=' + orderId + '&size=240x240';
+        document.getElementById('barcodeValue').innerText = orderId;
+        var modal = new bootstrap.Modal(document.getElementById('barcodeModal'));
+        modal.show();
+    }
+</script>
+@endpush
+@endsection
