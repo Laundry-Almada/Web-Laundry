@@ -27,12 +27,11 @@ class OrderController extends Controller
     public function create()
     {
         Log::info('Mengakses halaman tambah order');
-        $services = [
-            ['id' => 'kiloan', 'name' => 'Kiloan', 'price' => 7000],
-            ['id' => 'express', 'name' => 'Express', 'price' => 10000],
-            ['id' => 'satuan', 'name' => 'Satuan', 'price' => 5000],
-            ['id' => 'reguler', 'name' => 'Reguler', 'price' => 6000]
-        ];
+        // Ambil hanya 1 layanan unik per nama (misal: harga terendah)
+        $services = \App\Models\Service::query()
+            ->selectRaw('MIN(id) as id, name, MIN(price) as price')
+            ->groupBy('name')
+            ->get();
         return view('admin.tambahorder', compact('services'));
     }
 
@@ -43,29 +42,19 @@ class OrderController extends Controller
         try {
             $validated = $request->validate([
                 'customer_name' => 'required|string|max:255',
-                'service_id' => 'required|in:kiloan,express,satuan,reguler',
+                'service_id' => 'required|exists:services,id',
                 'order_date' => 'required|date',
                 'weight' => 'required|numeric|min:0.1',
                 'total_price' => 'required|numeric|min:0',
-                'status' => 'required|string|in:pending,processing,ready_picked,completed',
+                'status' => 'required|string|in:pending,washed,dried,ironed,ready_picked,completed,cancelled',
                 'note' => 'nullable|string|max:500'
             ]);
 
             // Generate unique barcode
             $barcode = 'LAU-' . strtoupper(uniqid());
 
-            // Get service price based on type
-            $servicePrices = [
-                'kiloan' => 7000,
-                'express' => 10000,
-                'satuan' => 5000,
-                'reguler' => 6000
-            ];
-
-            // Calculate total price if not provided
-            if (!isset($validated['total_price']) || $validated['total_price'] <= 0) {
-                $validated['total_price'] = $servicePrices[$validated['service_id']] * $validated['weight'];
-            }
+            // Ambil service dari database
+            $service = Service::findOrFail($validated['service_id']);
 
             // Create or find customer
             $customer = Customer::firstOrCreate(
@@ -85,24 +74,12 @@ class OrderController extends Controller
                 ]
             );
 
-            // Create service if it doesn't exist
-            $service = Service::firstOrCreate(
-                [
-                    'laundry_id' => $laundry->id,
-                    'name' => ucfirst($validated['service_id'])
-                ],
-                [
-                    'price' => $servicePrices[$validated['service_id']],
-                    'description' => 'Layanan ' . ucfirst($validated['service_id'])
-                ]
-            );
-
             // Create order
             $order = Order::create([
                 'customer_id' => $customer->id,
                 'laundry_id' => $laundry->id,
                 'service_id' => $service->id,
-                'jenis' => ucfirst($validated['service_id']),
+                'jenis' => $service->name,
                 'status' => $validated['status'],
                 'barcode' => $barcode,
                 'weight' => $validated['weight'],
@@ -132,7 +109,11 @@ class OrderController extends Controller
         Log::info('Mengakses halaman edit order', ['id' => $order->id]);
         $customers = Customer::all();
         $laundries = Laundry::all();
-        $services = \App\Models\Service::all();
+        // Ambil hanya 1 layanan unik per nama (misal: harga terendah)
+        $services = \App\Models\Service::query()
+            ->selectRaw('MIN(id) as id, name, MIN(price) as price')
+            ->groupBy('name')
+            ->get();
         return view('admin.editorder', compact('order', 'customers', 'laundries', 'services'));
     }
 
@@ -153,6 +134,16 @@ class OrderController extends Controller
             'status' => 'required|string',
             'note' => 'nullable|string'
         ]);
+
+
+        // Update nama customer jika berubah
+        if ($request->filled('customer_name')) {
+            $customer = \App\Models\Customer::find($validated['customer_id']);
+            if ($customer && $customer->name !== $request->customer_name) {
+                $customer->name = $request->customer_name;
+                $customer->save();
+            }
+        }
 
         $order->update($validated);
         Log::info('Berhasil update order', ['id' => $order->id]);

@@ -24,7 +24,7 @@
       <!-- Tabel Order -->
       <div class="order-table-card order-table-rounded">
         <div class="order-table-header order-table-grid-order">
-          <div>ORDER ID</div>
+          <div>BARCODE</div>
           <div>NAMA</div>
           <div>BERAT</div>
           <div>ANTAR</div>
@@ -34,7 +34,9 @@
         <div class="order-table-body">
           @foreach($recentOrders ?? [] as $order)
           <div class="order-row order-table-grid-order">
-            <div class="truncate order-id-col">{{ $order->id }}</div>
+          <div class="truncate order-id-col">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data={{ $order->id }}&amp;size=60x60" alt="Barcode" style="height:38px;">
+          </div>
             <div>{{ $order->customer->name ?? '-' }}</div>
             <div class="text-end">{{ $order->weight ?? '3' }} KG</div>
             <div>{{ $order->antar ?? 'AMBIL DI TOKO' }}</div>
@@ -45,24 +47,26 @@
         </div>
       </div>
     </div>
-    <div class="col-12 d-flex flex-row gap-4 mt-4">
+    <div class="col-12 d-flex flex-row gap-4 mt-4 flex-wrap">
       <div class="tracking-table-card tracking-table-rounded flex-grow-1" style="max-width: 40%">
         <div class="tracking-table-header tracking-table-grid-tracking">
-          <div>ORDER ID</div>
+          <div>BARCODE</div>
           <div>TRACKING</div>
         </div>
         <div class="tracking-table-body">
           @foreach($recentOrders ?? [] as $order)
           <div class="tracking-row tracking-table-grid-tracking">
-            <div class="truncate">{{ $order->id }}</div>
+          <div class="truncate">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data={{ $order->id }}&amp;size=40x40" alt="Barcode" style="height:28px;">
+          </div>
             <div>{{ strtoupper($order->status) }}</div>
           </div>
           @endforeach
         </div>
       </div>
-    <div class="chart-card chart-card-rounded flex-grow-1" style="max-width: 60%">
-      <canvas id="customerChart" height="260"></canvas>
-    </div>
+      <div class="chart-card chart-card-rounded flex-grow-1 ms-0 ms-md-4 mt-4 mt-md-0" style="max-width: 60%">
+        <canvas id="orderBarChart" height="260"></canvas>
+      </div>
     </div>
   </div>
 </div>
@@ -277,12 +281,24 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Data dummy untuk grafik batang
+  // Ambil data order dari blade ke JS
+  const orderData = @json($recentOrders ?? []);
+  // Hitung jumlah order per hari (Senin-Minggu)
+  const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  const orderCount = [0,0,0,0,0,0,0];
+  orderData.forEach(order => {
+    // Asumsi order.order_date format YYYY-MM-DD
+    const date = new Date(order.order_date);
+    // getDay: 0=Min, 1=Sen, ..., 6=Sab
+    let idx = date.getDay();
+    idx = idx === 0 ? 6 : idx-1; // Ubah 0(Min) ke 6, 1(Sen) ke 0, dst
+    orderCount[idx]++;
+  });
   const barData = {
-    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+    labels: days,
     datasets: [{
       label: 'Order',
-      data: [12, 19, 8, 15, 10, 17, 14],
+      data: orderCount,
       backgroundColor: '#1e5a99',
       borderRadius: 8,
       barThickness: 28

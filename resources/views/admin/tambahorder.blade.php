@@ -104,28 +104,31 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="weight" class="form-label">Berat (Kg)</label>
-                    <input type="number" step="0.1" min="0.1" name="weight" id="weight" class="form-control"
-                           value="{{ old('weight') }}" required>
+                    <label for="weight" class="form-label">Berat (Kg)
+                        <span style="font-weight:normal; color:#888; font-size:90%">(Contoh: 1.5 untuk 1,5kg atau 1500 untuk 1,5kg)</span>
+                    </label>
+                    <input type="number" step="0.1" min="0.1" name="weight" id="weight" class="form-control" value="{{ old('weight') }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="total_price" class="form-label">Total Harga (Rp)</label>
                     <div class="input-group">
                         <span class="input-group-text">Rp</span>
-                        <input type="number" name="total_price" id="total_price" class="form-control"
-                               value="{{ old('total_price') }}" required>
+                        <input type="number" name="total_price" id="total_price" class="form-control" value="{{ old('total_price') }}" required readonly>
                     </div>
-                    <small class="text-muted">Total harga akan otomatis terhitung, tapi bisa diubah manual</small>
+                    <small class="text-muted">Total harga akan otomatis terhitung</small>
                 </div>
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
                     <select name="status" class="form-select" required>
                         <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="processing" {{ old('status') == 'processing' ? 'selected' : '' }}>Diproses</option>
+                        <option value="washed" {{ old('status') == 'washed' ? 'selected' : '' }}>Dicuci</option>
+                        <option value="dried" {{ old('status') == 'dried' ? 'selected' : '' }}>Dikeringkan</option>
+                        <option value="ironed" {{ old('status') == 'ironed' ? 'selected' : '' }}>Disetrika</option>
                         <option value="ready_picked" {{ old('status') == 'ready_picked' ? 'selected' : '' }}>Siap Diambil</option>
                         <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
+                        <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                     </select>
                 </div>
 
@@ -148,33 +151,33 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const serviceSelect = document.getElementById('service_id');
-    const weightInput = document.getElementById('weight');
-    const totalPriceInput = document.getElementById('total_price');
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceSelect = document.getElementById('service_id');
+        const weightInput = document.getElementById('weight');
+        const totalPriceInput = document.getElementById('total_price');
 
-    function calculateTotalPrice() {
-        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-        const price = selectedOption.dataset.price || 0;
-        const weight = weightInput.value || 0;
-        const total = price * weight;
-
-        if (totalPriceInput.value === '' || totalPriceInput.value == (price * (weightInput.dataset.lastWeight || 0)).toString()) {
-            totalPriceInput.value = total;
+        function calculateTotal() {
+            const selected = serviceSelect.options[serviceSelect.selectedIndex];
+            const price = parseFloat(selected.getAttribute('data-price')) || 0;
+            const weight = parseFloat(weightInput.value) || 0;
+            const total = price * weight;
+            totalPriceInput.value = total > 0 ? Math.round(total) : '';
         }
 
-        weightInput.dataset.lastWeight = weight;
-    }
+        // Konversi otomatis gram ke kg
+        weightInput.addEventListener('blur', function() {
+            let val = parseFloat(weightInput.value);
+            if (!isNaN(val) && val > 100) {
+                val = val / 1000;
+                weightInput.value = val.toFixed(2);
+                calculateTotal();
+            }
+        });
 
-    serviceSelect.addEventListener('change', calculateTotalPrice);
-    weightInput.addEventListener('input', calculateTotalPrice);
-
-    if (serviceSelect.value && weightInput.value) {
-        calculateTotalPrice();
-    }
-});
+        serviceSelect.addEventListener('change', calculateTotal);
+        weightInput.addEventListener('input', calculateTotal);
+        calculateTotal();
+    });
 </script>
-@endpush
 @endsection

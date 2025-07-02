@@ -183,8 +183,8 @@
           <span><i class="fas fa-envelope"></i> Email: almadalaundry@gmail.com</span>
         </div>
         <div class="header-actions">
-          <a href="{{ route('login') }}" class="btn btn-login">LOGIN</a>
-          <a href="{{ route('register') }}" class="btn btn-register">REGISTER</a>
+          {{-- <a href="{{ route('login') }}" class="btn btn-login">LOGIN</a>
+          <a href="{{ route('register') }}" class="btn btn-register">REGISTER</a> --}}
         </div>
       </header>
       <main class="content-area">
@@ -201,6 +201,7 @@
           </div>
         @endif
         @yield('content')
+        @stack('scripts')
       </main>
       <footer>
         <div class="container">
@@ -210,5 +211,6 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </body>
 </html>
