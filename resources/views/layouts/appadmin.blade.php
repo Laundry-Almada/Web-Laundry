@@ -161,7 +161,7 @@
 <body>
   <div class="main-wrapper">
     <aside class="sidebar">
-      <img src="/logo-laundry.png" alt="Logo Almada Laundry" class="logo">
+      <img src="{{ asset('logo-laundry.png') }}" alt="Logo Almada Laundry" class="logo">
       <div class="sidebar-menu">
         <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fas fa-chart-pie"></i> Dashboard</a>
         <a href="{{ route('admin.orders') }}" class="{{ request()->routeIs('admin.orders') ? 'active' : '' }}"><i class="fas fa-list"></i> Order</a>

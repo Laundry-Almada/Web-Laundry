@@ -18,17 +18,24 @@ class DashboardController extends Controller
             $totalLaundries = Laundry::count();
             $totalCustomers = User::where('role', 'customer')->count();
             $pendingOrders = Order::where('status', 'pending')->count();
+            $totalRevenue = Order::sum('total_price'); 
+            $recentOrders = Order::with(['customer', 'service'])->latest('order_date')->take(5)->get();
+
             return view('admin.dashboard', compact(
                 'totalOrders',
                 'totalLaundries',
                 'totalCustomers',
-                'pendingOrders'
+                'pendingOrders',
+                'totalRevenue',
+                'recentOrders'
             ));
-        } else if ($user->role === 'staff') {
+        } elseif ($user->role === 'staff') {
             return $this->staffDashboard();
         }
+
         abort(403, 'Unauthorized');
     }
+
 
     public function staffDashboard()
     {

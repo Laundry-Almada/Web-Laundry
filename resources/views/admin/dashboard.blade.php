@@ -1,35 +1,20 @@
 @extends('layouts.appadmin')
-
 @section('content')
 <div class="dashboard-wrapper">
   <!-- Statistik Ringkas -->
   <div class="row g-4 mb-4 dashboard-stats">
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-6 col-md-6">
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-        <div class="stat-label">Total Sales</div>
+        <div class="stat-label">Total Pendapatan</div>
         <div class="stat-value">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }},-</div>
       </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-6 col-md-6">
       <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
         <div class="stat-label">Total Customer</div>
         <div class="stat-value">{{ $totalCustomers ?? 0 }} customer</div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
-        <div class="stat-label">Total Transactions</div>
-        <div class="stat-value">Rp {{ number_format($totalOrders ?? 0, 0, ',', '.') }},-</div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fas fa-receipt"></i></div>
-        <div class="stat-label">Total Tax</div>
-        <div class="stat-value">Rp 899.900,-</div>
       </div>
     </div>
   </div>
@@ -52,7 +37,7 @@
             <div class="truncate order-id-col">{{ $order->id }}</div>
             <div>{{ $order->customer->name ?? '-' }}</div>
             <div class="text-end">{{ $order->weight ?? '3' }} KG</div>
-            <div>{{ $order->antar ?? 'HOME DELIVERY' }}</div>
+            <div>{{ $order->antar ?? 'AMBIL DI TOKO' }}</div>
             <div>{{ $order->service->name ?? 'EXPRESS' }}</div>
             <div class="total-col">Rp{{ number_format($order->total_price ?? 0, 0, ',', '.') }},-</div>
           </div>
@@ -75,13 +60,12 @@
           @endforeach
         </div>
       </div>
-      <div class="chart-card chart-card-rounded flex-grow-1" style="max-width: 60%">
-        <canvas id="orderBarChart" height="260"></canvas>
-      </div>
+    <div class="chart-card chart-card-rounded flex-grow-1" style="max-width: 60%">
+      <canvas id="customerChart" height="260"></canvas>
+    </div>
     </div>
   </div>
 </div>
-
 <style>
 .dashboard-wrapper {
   width: 100%;
