@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\LaundryController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::middleware(['api', 'auth:sanctum', 'role:admin'])->group(function () {
+Route::middleware(['api', 'auth:sanctum'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [OrderController::class, 'adminDashboard']);
         Route::prefix('orders')->group(function () {
@@ -29,7 +28,7 @@ Route::middleware(['api', 'auth:sanctum', 'role:admin'])->group(function () {
     });
 });
 
-Route::middleware(['api', 'auth:sanctum', 'role:staff'])->group(function () {
+Route::middleware(['api', 'auth:sanctum'])->group(function () {
     Route::prefix('staff')->group(function () {
         Route::get('/home', [OrderController::class, 'staffHome']);
         Route::prefix('orders')->group(function () {
@@ -47,19 +46,22 @@ Route::middleware(['api'])->group(function () {
         Route::post('/', [LaundryController::class, 'store']);
         Route::get('/{laundry}', [LaundryController::class, 'show']);
     });
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/check/{identifier}', [CustomerController::class, 'check']);
+        Route::get('/search', [CustomerController::class, 'search']);
+        Route::get('/{identifier}/orders', [CustomerController::class, 'getOrders']);
+    });
 });
 
-Route::prefix('customers')->group(function () {
-    Route::get('/check/{identifier}', [OrderController::class, 'checkCustomer']);
-    Route::get('/search', [OrderController::class, 'searchCustomers']);
-    Route::get('/{phone}/orders', [OrderController::class, 'trackOrders']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Profile routes
+    Route::get('/user', [ProfileController::class, 'getProfile']);
+    Route::put('/updateProfile', [ProfileController::class, 'updateProfile']);
 });
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register')->name('register');
     Route::post('login', 'login')->name('login');
     Route::middleware('auth:sanctum')->post('logout', 'logout')->name('logout');
-    Route::middleware('auth:sanctum')->put('updateProfile', 'updateProfile')->name('updateProfile');
-    // get users
-    Route::middleware('auth:sanctum')->get('user', 'getUser')->name('user');
 });

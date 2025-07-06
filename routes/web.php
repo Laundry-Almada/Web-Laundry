@@ -61,7 +61,7 @@ require __DIR__.'/auth.php';
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 // Staff Routes
-Route::prefix('staff')->middleware(['auth', 'role:staff'])->group(function () {
+Route::prefix('staff')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'staffDashboard'])->name('staff.dashboard');
     Route::get('/orders', [StaffOrderController::class, 'staffOrders'])->name('staff.orders');
 });
